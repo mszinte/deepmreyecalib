@@ -60,35 +60,33 @@ const.fixtask.n_locs                                 =    [5 5]; % n fixation lo
 const                                                =    getFixLocations(const,scr); %create coordinates for fixation locations
 
 %Smooth Pursuit Task (Calib Matthias) 
-const.pursuit.win_sz         =    10;
+const.pursuit.win_sz         =    14;
 const.pursuit.win_sz_px      =    vaDeg2pix(const.pursuit.win_sz, scr);
-const.pursuit.angles         =    deg2rad(0:35.8889:359);%deg2rad(0:15:359); % tested directions
-const.pursuit.mov_amp        =    [1 1.5 2]; % movement amplitudes in visual angle
-valid = 0; while ~valid
-    [const, valid]           =    getFixLocations_pursuit(const,scr,valid); end % create trajectories for smoooth pursuit
-
+const.pursuit.angles         =    [0:20:359];
+const.pursuit.mov_amp        =    [3 5 7];
+% valid = 0; while ~valid
+%     [const, valid]           =    getFixLocations_pursuit(const,scr,valid); end % create trajectories for smoooth pursuit
 
 %Picture Free Viewing Task (Calib Matthias) 
-const.picTask.pic_sz         =   10;
+const.picTask.pic_sz         =   14;
 const.picTask.pic_sz_px      =   vaDeg2pix(const.picTask.pic_sz, scr);
 const.picTask.path2pics      =   fullfile('./stim/images'); 
 const.picTask.n_pics         =   10; % how many of the pictures in the folder should be shown (random selection)? (10)
 
 % Trial settings
-if const.mkVideo
-    const.nb_repeat = 1;                                                    % Trial repetition in video mode
-    const.nb_trials = 1;                                                    % Number of trials in video mode
-else
-    const.nb_repeat = 1;
-    const.nb_trials = 1;                                                    
-    const.nb_trials_fix = 1;
-    const.nb_trials_purs = 1;
-    const.nb_trials_pic = 1;
-    %const.nb_repeat * length(const.task_lst) * ...                         % Number of trials  
-        %length(const.task_lst);
-end
+const.nb_repeat_fixation = 2;
+const.nb_trials_fixation = const.fixtask.n_locs(1)*const.fixtask.n_locs(2) ...
+    * const.nb_repeat_fixation;
 
+const.nb_repeat_pursuit = 1;
+const.nb_trials_pursuit = length(const.pursuit.mov_amp) * ...
+    length(const.pursuit.angles) * const.nb_repeat_pursuit;
 
+const.nb_repeat_freeview = 1;
+const.nb_trials_freeview = const.picTask.n_pics;
+
+const.nb_trials = const.nb_trials_fixation + const.nb_trials_pursuit + ...
+    const.nb_trials_freeview;
 
 % define total TR numbers and scan duration
 if const.scanner
