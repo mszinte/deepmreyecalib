@@ -1,4 +1,4 @@
-function expDes = designConfig(const)
+function expDes = designConfig(scr, const)
 % ----------------------------------------------------------------------
 % expDes = designConfig(const)
 % ----------------------------------------------------------------------
@@ -6,6 +6,7 @@ function expDes = designConfig(const)
 % Define experimental design
 % ----------------------------------------------------------------------
 % Input(s) :
+% scr : struct of the screen settings
 % const : struct containing constant configurations
 % ----------------------------------------------------------------------
 % Output(s):
@@ -64,15 +65,54 @@ ii = 0;
 trialMat_pursuit = zeros(const.nb_trials_pursuit, expDes.nb_var+1)*nan;
 for rep = 1:const.nb_repeat_pursuit
     for var2 = 1:expDes.nb_var2
-        for var3= 1:expDes.nb_var3
+        for var3 = 1:expDes.nb_var3
             ii = ii + 1;
             trialMat_pursuit(ii, 1) = 2;
             trialMat_pursuit(ii, 3) = var2;
-            trialMat_pursuit(ii, 4) = NaN; % define later as possible to stay onscreen
+            trialMat_pursuit(ii, 4) = var3; % rewriten after
         end
     end
 end
 trialMat_pursuit = trialMat_pursuit(randperm(const.nb_trials_pursuit),:);
+
+% compute possibility for angle
+
+pursuit_coords_on = [];
+pursuit_coords_off = [];
+for trial_pursuit = 1:const.nb_trials_pursuit
+    
+    
+    pursuit_amp = const.pursuit_amp(trialMat_pursuit(trial_pursuit,3));
+    pursuit_angle = const.pursuit_angles(trialMat_pursuit(trial_pursuit,4));
+    recompute = 1;
+    while recompute == 1
+        if trial_pursuit == 1
+            pursuit_coord_on = [scr.x_mid, scr.y_mid];
+            pursuit_coord_off = [scr.x_mid + pursuit_amp * cosd(pursuit_angle),...
+                                 scr.y_mid + pursuit_amp * -sind(pursuit_angle)];
+        else
+            pursuit_coord_on = pursuit_coords_off(trial_pursuit-1, :);
+            pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
+                                                    pursuit_amp * -sind(pursuit_angle)];
+        end
+
+        % if fixation cross leaves calibration window select another angle
+        if pursuit_coord_off(1) < scr.x_mid - const.window_size/2 || ...
+                pursuit_coord_off(1) > scr.x_mid + const.window_size/2 || ...
+                pursuit_coord_off(2) < scr.y_mid - const.window_size/2 || ...
+                pursuit_coord_off(2) > scr.y_mid + const.window_size/2     
+            recompute = 1;
+            rand_val = randperm(length(const.pursuit_angles));
+            trialMat_pursuit(trial_pursuit, 4) = rand_val;
+            pursuit_angle = const.pursuit_angles(rand_val(1));
+        else 
+            recompute = 0;
+        end
+    end
+    pursuit_coords_on = [pursuit_coords_on; pursuit_coord_on];
+    pursuit_coords_off = [pursuit_coords_off; pursuit_coord_off];
+end
+close all;plot(pursuit_coords_on(:,1),pursuit_coords_on(:,2),'+');hold on; plot(pursuit_coords_off(:,1),pursuit_coords_off(:,2),'o'); xlim([0,1920]); ylim([0,1080]); ax=gca; ax.YDir='reverse';
 
 % Freeview experimental loop
 ii = 0;

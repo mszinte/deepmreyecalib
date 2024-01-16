@@ -55,8 +55,7 @@ scr.disp_sizeBot = round(-scr.disp_sizeY/2);
 scr.x_mid = (scr.scr_sizeX/2.0);
 scr.y_mid = (scr.scr_sizeY/2.0);
 scr.mid = [scr.x_mid,scr.y_mid];
-scr.x_mid_deg = pix2angle(scr,scr.x_mid);
-scr.y_mid_deg = pix2angle(scr,scr.y_mid);
+
 
 % Pixels size
 scr.clr_depth = Screen('PixelSize', scr.scr_num);
@@ -78,13 +77,6 @@ if (scr.hz >= 1.1 * const.desiredFD || scr.hz <= 0.9 * const.desiredFD) ...
         const.desiredFD);
 end
 
-% Units settings
-scr.scr_sizeX_cm = pix2cm(scr.scr_sizeX,scr);
-scr.scr_sizeY_cm = pix2cm(scr.scr_sizeY,scr);
-scr.units.ScrDiag_px = sqrt(scr.scr_sizeX^2 + scr.scr_sizeY^2);
-scr.units.ScrDiag_cm = sqrt(scr.scr_sizeX_cm^2 + scr.scr_sizeY_cm^2);
-scr.units.pxPcm = scr.units.ScrDiag_px/scr.units.ScrDiag_cm;
-scr.units.pxPdeg = (scr.dist*tand(1))*scr.units.pxPcm;
 
 % Overal settings
 if ~const.expStart

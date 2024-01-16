@@ -5,8 +5,6 @@ function const = getFixLocations(const,scr)
 %adapted SK, Dec 23
 
 % get coordinates
-x = round(linspace(scr.x_mid - const.fixtask.win_sz_px/2, scr.x_mid + const.fixtask.win_sz_px/2, const.fixtask.n_locs(1)))';
-y = round(linspace(scr.y_mid - const.fixtask.win_sz_px/2, scr.y_mid + const.fixtask.win_sz_px/2, const.fixtask.n_locs(2)))';
 
 
 xy = [];

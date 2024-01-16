@@ -30,7 +30,7 @@ my_key = keyConfig(const);
 const = constConfig(scr, const);
 
 % Experimental design
-expDes = designConfig(scr, const);
+expDes = designConfig(scconst);
 
 % Audio configurations
 aud = audioConfig;
