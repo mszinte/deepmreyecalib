@@ -22,12 +22,7 @@ function const = constConfig(scr, const)
 % Colors
 const.white = [1, 1, 1];
 const.black = [0,0,0];
-const.gray = [0.5, 0.5, 0.5];
-const.dark_gray = [0.3, 0.3, 0.3];
-const.red = [0.8, 0, 0];
-const.green = [0.2, 0.7, 0.2];
-const.fixation_color = const.dark_gray;
-const.background_color = const.gray; 
+
 
 % Time parameters
 const.TR_sec = 1.2;                                                         % MRI time repetition in seconds
@@ -46,47 +41,87 @@ const.picTask.dur_TR = 3;                                                       
 const.picTask.dur_sec = const.picTask.dur_TR * const.TR_sec;                    % Picture free viewing task stimulus duration in seconds, should be 1.2
 const.picTask.dur_frm = round(const.picTask.dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
 
-
 %const.TRs = (const.fixtask.dur_TR+const.pursuit.dur_TR+const.picTask.dur_TR+const.triang.dur_TR)*2; % TR per trials
-    
+
 % Stim parameters
 [const.ppd] = vaDeg2pix(1, scr); % one pixel per dva
 const.dpp = 1/const.ppd;         %degrees per pixel
 
-%Fixation Task (Calib Matthias)
-const.fixtask.win_sz                                 =    10; %in degrees of visual angle 
-const.fixtask.win_sz_px                              =    vaDeg2pix(const.fixtask.win_sz, scr);  %will return x y pixels
-const.fixtask.n_locs                                 =    [5 5]; % n fixation locations [horizontal, vertical] [10 10]
-const                                                =    getFixLocations(const,scr); %create coordinates for fixation locations
-
-%Smooth Pursuit Task (Calib Matthias) 
-const.pursuit.win_sz         =    10;
-const.pursuit.win_sz_px      =    vaDeg2pix(const.pursuit.win_sz, scr);
-const.pursuit.angles         =    deg2rad(0:35.8889:359);%deg2rad(0:15:359); % tested directions
-const.pursuit.mov_amp        =    [1 1.5 2]; % movement amplitudes in visual angle
-valid = 0; while ~valid
-    [const, valid]           =    getFixLocations_pursuit(const,scr,valid); end % create trajectories for smoooth pursuit
+const.window_sizeVal = 14;
 
 
-%Picture Free Viewing Task (Calib Matthias) 
-const.picTask.pic_sz         =   10;
-const.picTask.pic_sz_px      =   vaDeg2pix(const.picTask.pic_sz, scr);
-const.picTask.path2pics      =   fullfile('./stim/images'); 
-const.picTask.n_pics         =   10; % how many of the pictures in the folder should be shown (random selection)? (10)
+% fixation task
+const.fixation_rows = 5;
+const.fixation_cols = 5;
+const.window_size = vaDeg2pix(const.window_sizeVal, scr);
+
+const.fixation_coord_x = linspace(scr.x_mid - const.window_size/2, ...
+                                  scr.x_mid + const.window_size/2, ...
+                              const.fixation_cols);
+                              
+const.fixation_coord_y = linspace(scr.y_mid - const.window_size/2, ...
+                                  scr.y_mid + const.window_size/2, ...
+                              const.fixation_cols);
+                          
+const.fixation_coords = [];
+for fix_cols = 1:const.fixation_cols
+    for fix_rows = 1:const.fixation_rows
+        
+        const.fixation_coords = [const.fixation_coords;...
+                                 const.fixation_coord_x(fix_rows), ...
+                                 const.fixation_coord_y(fix_cols)];
+    end
+end
+
+
+% pursuit task
+const.pursuit_ampVal = [3, 5, 7];
+const.pursuit_amp = vaDeg2pix(const.pursuit_ampVal, scr);
+
+const.pursuit_angles_steps = 20;
+const.pursuit_angles = [0:const.pursuit_angles_steps:359];
+
+% freeview task
+const.freeview_pics = 10;
 
 % Trial settings
-if const.mkVideo
-    const.nb_repeat = 1;                                                    % Trial repetition in video mode
-    const.nb_trials = 1;                                                    % Number of trials in video mode
-else
-    const.nb_repeat = 1;
-    const.nb_trials = 1;                                                    
-    const.nb_trials_fix = 1;
-    const.nb_trials_purs = 1;
-    const.nb_trials_pic = 1;
-    %const.nb_repeat * length(const.task_lst) * ...                         % Number of trials  
-        %length(const.task_lst);
-end
+const.nb_repeat_fixation = 2;
+const.nb_trials_fixation = const.fixation_rows * const.fixation_cols ...
+    * const.nb_repeat_fixation;
+
+const.nb_repeat_pursuit = 1;
+const.nb_trials_pursuit = length(const.pursuit_ampVal) * ...
+    length(const.pursuit_angles) * const.nb_repeat_pursuit;
+
+const.nb_repeat_freeview = 1;
+const.nb_trials_freeview = const.freeview_pics;
+
+const.nb_trials = const.nb_trials_fixation + const.nb_trials_pursuit + ...
+    const.nb_trials_freeview;
+
+
+
+% 
+% 
+% %Fixation Task (Calib Matthias)
+% const.fixtask.win_sz                                 =    10; %in degrees of visual angle 
+% const.fixtask.win_sz_px                              =    vaDeg2pix(const.fixtask.win_sz, scr);  %will return x y pixels
+% const.fixtask.n_locs                                 =    [5 5]; % n fixation locations [horizontal, vertical] [10 10]
+% const                                                =    getFixLocations(const,scr); %create coordinates for fixation locations
+% 
+% %Smooth Pursuit Task (Calib Matthias) 
+% const.pursuit.win_sz         =    14;
+% const.pursuit.win_sz_px      =    vaDeg2pix(const.pursuit.win_sz, scr);
+% const.pursuit.angles         =    [0:20:359];
+% const.pursuit.mov_amp        =    [3 5 7];
+% % valid = 0; while ~valid
+% %     [const, valid]           =    getFixLocations_pursuit(const,scr,valid); end % create trajectories for smoooth pursuit
+% 
+% %Picture Free Viewing Task (Calib Matthias) 
+% const.picTask.pic_sz         =   14;
+% const.picTask.pic_sz_px      =   vaDeg2pix(const.picTask.pic_sz, scr);
+% const.picTask.path2pics      =   fullfile('./stim/images'); 
+% const.picTask.n_pics         =   10; % how many of the pictures in the folder should be shown (random selection)? (10)
 
 
 

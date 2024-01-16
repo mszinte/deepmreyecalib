@@ -37,9 +37,9 @@ while cTrial <= (numel(const.pursuit.mov_amp)*numel(const.pursuit.angles)+1)   %
     
     
     const.pursuit.xy(cTrial,1) = (const.pursuit.xy(cTrial-1,1)) + trial_amp * cos(trial_angle);
-    disp(num2str(const.pursuit.xy(cTrial,1)));
+    %disp(num2str(const.pursuit.xy(cTrial,1)));
     const.pursuit.xy(cTrial,2) = (const.pursuit.xy(cTrial-1,2)) + trial_amp * sin(trial_angle);
-    disp(num2str(const.pursuit.xy(cTrial,2)));
+    %disp(num2str(const.pursuit.xy(cTrial,2)));
 
     %disp(['Current Coordinates: (' num2str(const.pursuit.xy(cTrial, 1)) ', ' num2str(const.pursuit.xy(cTrial, 2)) ')']);
 
