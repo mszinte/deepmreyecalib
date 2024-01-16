@@ -25,6 +25,9 @@ scr = scrConfig(const);
 % Triggers and button configurations
 my_key = keyConfig(const);
 
+% Experimental design
+expDes = designConfig(const);
+
 % Experimental constant
 const = constConfig(scr, const);
 

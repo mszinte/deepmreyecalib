@@ -4,16 +4,12 @@
 % Projet: DeepMReyeClosed
 
 % Experimental design :
-% Task 1: calibration (fixation + pursuit + free viewing) : ~1 min
-% Task 2: triangle eyes open : ~? min
-% Task 3: triangle eyes blink : ~? min
-% Task 4: triangle eyes closed : ~? min
+% Task 1: calibration fixation 
+% Task 1: calibration pursuit
+% Task 1: calibration freeview images
 
 % TODO (Sina)
 % -------------
-% - change for 3 sounds
-% - fix smooth to stay in a square in a circle
-
 
 % First settings
 Screen('CloseAll'); clear all; clear mex; clear functions; close all; ...
