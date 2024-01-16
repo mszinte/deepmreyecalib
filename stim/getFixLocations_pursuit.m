@@ -14,7 +14,10 @@ mov_amp = mov_amp(:)';     %one-dimensional array representing the scaled amplit
 % window for pursuit trajectory (fixation cross will not leave this window)
 
 
-calib_win = [round((scr.x_mid - const.fixtask.win_sz_px)/1.25), round((scr.x_mid + const.fixtask.win_sz_px)/1.25); 0, round((scr.y_mid + const.fixtask.win_sz_py)/1.25)];
+%calib_win = [round(scr.x_mid - const.fixtask.win_sz_px/2), round(scr.x_mid + const.fixtask.win_sz_px/2); 0, round(scr.y_mid + const.fixtask.win_sz_px/2)];
+calib_win = [round(scr.x_mid - const.pursuit.win_sz_px/2), round(scr.x_mid + const.pursuit.win_sz_px/2); round(scr.y_mid - const.pursuit.win_sz_px/2), round(scr.y_mid + const.pursuit.win_sz_px/2)];
+
+
 calib_win_middle = [(calib_win(1,1) + calib_win(1,2)) / 2, (calib_win(2,1) + calib_win(2,2)) / 2];
 % create pursuit trajectory with defined movement angles & amplitudes within predefined window
 const.pursuit.xy = [calib_win_middle]; % start in center of window
@@ -34,7 +37,9 @@ while cTrial <= (numel(const.pursuit.mov_amp)*numel(const.pursuit.angles)+1)   %
     
     
     const.pursuit.xy(cTrial,1) = (const.pursuit.xy(cTrial-1,1)) + trial_amp * cos(trial_angle);
+    disp(num2str(const.pursuit.xy(cTrial,1)));
     const.pursuit.xy(cTrial,2) = (const.pursuit.xy(cTrial-1,2)) + trial_amp * sin(trial_angle);
+    disp(num2str(const.pursuit.xy(cTrial,2)));
 
     %disp(['Current Coordinates: (' num2str(const.pursuit.xy(cTrial, 1)) ', ' num2str(const.pursuit.xy(cTrial, 2)) ')']);
 

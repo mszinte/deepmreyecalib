@@ -22,8 +22,6 @@ my_key.escapeVal = 'escape';    % escape button
 my_key.spaceVal = 'space';      % space button
 
 my_key.mri_tr = KbName(my_key.mri_trVal);
-my_key.help = KbName(my_key.helpVal);
-my_key.other = KbName(my_key.otherVal);
 my_key.escape = KbName(my_key.escapeVal);
 my_key.right1 = KbName(my_key.right1Val);
 my_key.space = KbName(my_key.spaceVal);

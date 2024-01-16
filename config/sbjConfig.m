@@ -14,6 +14,7 @@ function const = sbjConfig(const)
 % ----------------------------------------------------------------------
 % Function created by Martin SZINTE (martin.szinte@gmail.com)
 % ----------------------------------------------------------------------
+const.task_num = 1;
 
 % Define participant
 if const.expStart
@@ -56,7 +57,7 @@ else
 end
 
 % Define task
-fprintf(1,'\n\tTask (1: calibration, 2: eyes open; 3: eyes partly closed; 4: closed eyes: %s\n',const.task_num);
+fprintf(1,'\n\tTask: %s\n (1: calibration, 2: eyes open; 3: eyes partly closed; 4: closed eyes)',num2str(const.task_num));
 switch const.task_num
     case 1; const.task = 'task-calib';
     case 2; const.task = 'task-triangle_eyes_open';
