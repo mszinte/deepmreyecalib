@@ -1,4 +1,4 @@
-function [const, scr, vbl] = playPictureViewing(const, scr, currLoc, frames)
+function [const, scr, cFrame, vbl] = playPictureViewing(const, scr, currLoc, frames)
 % play picture-viewing task
 % MN, September 2021
 
@@ -16,8 +16,7 @@ for cFrame = frames
     % draw image
     total_n_Locs          = currLoc+const.passedLocs;
     picSz                  = const.picTask.pic_sz_px;
-    [center(1), center(2)] = RectCenter(scr.rect);
-    picCoords              = [center(1)-picSz center(2)-picSz, center(1)+picSz center(2)+picSz];
+    picCoords              = [scr.x_mid-picSz/2 scr.y_mid-picSz/2, scr.x_mid+picSz/2 scr.y_mid+picSz/2];
     Screen('DrawTexture', scr.main, const.pics.id(currLoc), [],picCoords);
     
     % finish drawing and flip to screen

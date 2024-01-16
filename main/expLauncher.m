@@ -11,7 +11,6 @@
 % TODO (Sina)
 % -------------
 
-
 % First settings
 Screen('CloseAll'); clear all; clear mex; clear functions; close all; ...
     home; AssertOpenGL;

@@ -55,15 +55,15 @@ const.dpp = 1/const.ppd;         %degrees per pixel
 
 %Fixation Task (Calib Matthias)
 const.fixtask.win_sz                                 =    10; %in degrees of visual angle 
-const.fixtask.win_sz_px                              =    vaDeg2pix(const.fixtask.win_sz, scr);  %will return x y pixels
+const.fixtask.win_sz_p, const.fixtask.win_sz_py]     =    vaDeg2pix(const.fixtask.win_sz, scr);  %will return x y pixels
 const.fixtask.n_locs                                 =    [5 5]; % n fixation locations [horizontal, vertical] [10 10]
 const                                                =    getFixLocations(const,scr); %create coordinates for fixation locations
 
 %Smooth Pursuit Task (Calib Matthias) 
-const.pursuit.win_sz         =    10;
-const.pursuit.win_sz_px      =    vaDeg2pix(const.pursuit.win_sz, scr);
+const.pursuit.win_sz_px      =    const.fixtask.win_sz_px;
+const.pursuit.win_sz_py      =    const.fixtask.win_sz_py;
 const.pursuit.angles         =    deg2rad(0:35.8889:359);%deg2rad(0:15:359); % tested directions
-const.pursuit.mov_amp        =    [1 1.5 2]; % movement amplitudes in visual angle
+const.pursuit.mov_amp        =    [2 4 6]; % movement amplitudes in visual angle
 valid = 0; while ~valid
     [const, valid]           =    getFixLocations_pursuit(const,scr,valid); end % create trajectories for smoooth pursuit
 
@@ -79,11 +79,8 @@ if const.mkVideo
     const.nb_repeat = 1;                                                    % Trial repetition in video mode
     const.nb_trials = 1;                                                    % Number of trials in video mode
 else
-    const.nb_repeat = 1;
-    const.nb_trials = 1;                                                    
-    const.nb_trials_fix = 1;
-    const.nb_trials_purs = 1;
-    const.nb_trials_pic = 1;
+    const.nb_repeat = 1;                                                    %  4 Trial repetition
+    const.nb_trials = 1;
     %const.nb_repeat * length(const.task_lst) * ...                         % Number of trials  
         %length(const.task_lst);
 end

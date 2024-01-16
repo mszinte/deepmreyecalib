@@ -14,6 +14,7 @@ function const = sbjConfig(const)
 % ----------------------------------------------------------------------
 % Function created by Martin SZINTE (martin.szinte@gmail.com)
 % ----------------------------------------------------------------------
+const.task_num = 1;
 
 % Define participant
 if const.expStart

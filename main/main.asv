@@ -25,11 +25,12 @@ scr = scrConfig(const);
 % Triggers and button configurations
 my_key = keyConfig(const);
 
-% Experimental design
-expDes = designConfig(const);
-
 % Experimental constant
 const = constConfig(scr, const);
+
+
+% Experimental design
+expDes = designConfig(const);
 
 % Audio configurations
 aud = audioConfig;
@@ -45,22 +46,27 @@ Screen('BlendFunction', scr.main, GL_ONE, GL_ONE);
 Priority(MaxPriority(scr.main));
 
 % Open sound pointer
-%aud.master_main = PsychPortAudio('Open', [], aud.master_mode, ...
-%    aud.master_reqlatclass, [], aud.master_nChannels);
-%PsychPortAudio('Start', aud.master_main, aud.master_rep, ...
-%   aud.master_when, aud.master_waitforstart);
-%PsychPortAudio('Volume', aud.master_main, aud.master_globalVol);
-%aud.stim_handle = PsychPortAudio('OpenSlave', aud.master_main, ...
-%   aud.slaveStim_mode);
-
-
+PsychPortAudio('GetDevices')
+aud.master_main = PsychPortAudio('Open', [], aud.master_mode, ...
+    aud.master_reqlatclass, aud.master_rate, aud.master_nChannels);
+PsychPortAudio('Start', aud.master_main, aud.master_rep, ...
+   aud.master_when, aud.master_waitforstart);
+PsychPortAudio('Volume', aud.master_main, aud.master_globalVol);
+aud.stim_handle = PsychPortAudio('OpenSlave', aud.master_main, ...
+   aud.slaveStim_mode);
 % Import Pictures 
+
 const = importPics(const,scr);          % load images for picture viewing
-
-
-% Experimental design
-expDes = designConfig(const);
-
+% select random images
+path2pics = dir(fullfile(const.picTask.path2pics, 'image*'));
+% Check if path2pics is empty
+    if isempty(path2pics)
+        error('No images found in the specified folder.');
+    end
+path2pics = fullfile(path2pics(1).folder, {path2pics(:).name}');
+tmp  = unique(randi(numel(path2pics), 1, 100)); tmp = tmp(randperm(numel(tmp))); 
+path2pics = path2pics(tmp(1:const.picTask.n_pics));
+const.pics.paths = path2pics;
 
 % Initialize eye tracker
 if const.tracker
