@@ -13,14 +13,14 @@
 % -------------
 % - change for 3 sounds
 % - fix smooth to stay in a square in a circle
-% - fix fixation in correct range
+
 
 % First settings
 Screen('CloseAll'); clear all; clear mex; clear functions; close all; ...
     home; AssertOpenGL;
 
 % General settings
-const.expName = 'DeepMReyeClosed';      % experiment name
+const.expName = 'DeepMReyeCalib';       % experiment name
 const.expStart = 0;                     % Start of a recording (0 = NO, 1 = YES)
 const.checkTrial = 0;                   % Print trial conditions (0 = NO, 1 = YES)
 const.mkVideo = 0;                      % Make a video (0 = NO, 1 = YES)

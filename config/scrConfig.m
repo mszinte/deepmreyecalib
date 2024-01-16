@@ -19,7 +19,7 @@ scr.all = Screen('Screens');
 scr.scr_num = max(scr.all); %select biggest available screen to display
 
 % Screen resolution (pixel) :
-[scr.scr_sizeX, scr.scr_sizeY] = Screen('WindowSize', scr.scr_num);  %return width and hight of the screen in pixels
+[scr.scr_sizeX, scr.scr_sizeY] = Screen('WindowSize', scr.scr_num);  %return width and hight of the screen in pixel
 
 if (scr.scr_sizeX ~= const.desiredRes(1) || scr.scr_sizeY ~= ...
         const.desiredRes(2)) && const.expStart

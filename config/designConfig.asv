@@ -33,8 +33,8 @@ expDes.threeV = const.pursuit.angles;
 expDes.nb_var3 = length(const.pursuit.angles);
 
 % Var 4: picture number 
-expDes.fourV   =   const.pics.paths; %extract number from string of paths 
-expDes.nb_var4 =   const.picTask.n_pics; 
+expDes.fourV = const.pics.paths;
+expDes.nb_var4 = const.picTask.n_pics;
 
 % Experimental loop
 trialMat = zeros(const.nb_trials, expDes.nb_var1);

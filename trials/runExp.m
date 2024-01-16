@@ -108,7 +108,7 @@ if const.tracker
         'TASK INSTRUCTIONS - PRESS SPACE')
 end
 instructionsIm(scr, const, my_key, ...
-    sprintf('Task_%s', num2str(expDes.expMat(1, 5))), 0);
+    sprintf('instr_%s', const.task), 0);
 for keyb = 1:size(my_key.keyboard_idx, 2)
     KbQueueFlush(my_key.keyboard_idx(keyb));
 end
@@ -121,14 +121,36 @@ end
 
 
 % Main trial loop
-for trial = 1:const.nb_trials
+
+frames_fix = 1:const.fixtask.dur_sec*scr.hz+1;
+for trial = 1:numel(const.fixtask.xy_trials)
+    for cFrame = 1:numel(frames_fix)
+        expDes.trial = trial;
+        expDes = runTrials_fix(scr, const, cFrame, expDes, my_key, aud);
+    end
+end
+
+frames_purs = 1:const.pursuit.dur_frm*scr.hz+1;
+disp(['frames purs ', num2str(numel(frames_purs))])
+disp(['num trials purs', num2str(numel(const.pursuit.xy_trials_pursuit))])
+if numel(frames_purs) == numel(const.pursuit.xy_trials_pursuit)
+    disp("yay right size")
+    for trial = 1:numel(const.pursuit.xy_trials_pursuit)  %need to keep t running, but wont be able to index if I let it be from const.fixtask.xy_trials:const.pursuit.xy_trials
+        for cFrame = 1:numel(frames_purs)
+            expDes.trial = trial;
+            expDes = runTrials_pursuit(scr, const, cFrame, expDes, my_key, aud);
+        end
+    end
+end
+
+for trial = const.nb_trials_fix:const.nb_trials_pic
     expDes.trial = trial;
-    expDes = runTrials(scr, const, expDes, my_key, aud);
+    expDes = runTrials_picture(scr, const, expDes, my_key, aud);
 end
 
 %tsv file
 head_txt = {'onset', 'duration', 'run_number', 'trial_number', ...
-    'task'};  
+    'fixation location', 'pursuit amplitude', 'pursuit angle', 'picture id'};  
 
 for head_num = 1:length(head_txt)
     behav_txt_head{head_num} = head_txt{head_num};
