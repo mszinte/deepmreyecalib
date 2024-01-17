@@ -56,11 +56,7 @@ Priority(MaxPriority(scr.main));
 
 
 % Import Pictures 
-const = importPics(const,scr);          % load images for picture viewing
-
-
-% Experimental design
-expDes = designConfig(const);
+%const = importPics(const,scr);          % load images for picture viewing
 
 
 % Initialize eye tracker

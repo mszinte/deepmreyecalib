@@ -70,7 +70,7 @@ for rep = 1:const.nb_repeat_pursuit
             ii = ii + 1;
             trialMat_pursuit(ii, 1) = 2;
             trialMat_pursuit(ii, 3) = var2;
-            trialMat_pursuit(ii, 4) = var3; % rewriten after
+            trialMat_pursuit(ii, 4) = var3; % rewriten after ?
         end
     end
 end
@@ -116,13 +116,21 @@ for trial_pursuit = 1:const.nb_trials_pursuit
     expDes.pursuit_coords_int_y = [];
     for trial_pursuit = 1:size(pursuit_coords_on, 1)
   
-        x_interp = linspace(pursuit_coords_on(trial_pursuit, 1), pursuit_coords_off(trial_pursuit, 1), fix_dur + 1);
-        y_interp = linspace(pursuit_coords_on(trial_pursuit, 2), pursuit_coords_off(trial_pursuit, 2), fix_dur + 1);
-        %save in expDes
-        expDes.pursuit_coords_int_x = [expDes.pursuit_coords_int_x; x_interp];
-        expDes.pursuit_coords_int_y = [expDes.pursuit_coords_int_y; y_interp];
+        x_interp = linspace(pursuit_coords_on(trial_pursuit, 1), pursuit_coords_off(trial_pursuit, 1), fix_dur);
+        y_interp = linspace(pursuit_coords_on(trial_pursuit, 2), pursuit_coords_off(trial_pursuit, 2), fix_dur);
+        
+        pursuit_coords_int_x = [expDes.pursuit_coords_int_x; x_interp];
+        pursuit_coords_int_y = [expDes.pursuit_coords_int_y; y_interp];
     end
-end
+    expDes.pursuitcoords = cell(1, size(pursuit_coords_int_x, 2));
+
+% Loop through each column 
+    for col = 1:size(pursuit_coords_int_x, 2)
+        % Combine x and y coordinates into a 54x2 double array
+        expDes.pursuitcoords{col} = [pursuit_coords_int_x(:, col), pursuit_coords_int_y(:, col)];
+    end
+    
+    end
 %close all;plot(pursuit_coords_on(:,1),pursuit_coords_on(:,2),'+');hold on; plot(pursuit_coords_off(:,1),pursuit_coords_off(:,2),'o'); xlim([0,1920]); ylim([0,1080]); ax=gca; ax.YDir='reverse';
 
 % Freeview experimental loop
@@ -141,7 +149,7 @@ trialMat = [trialMat_fixation; ...
             trialMat_pursuit; ...
             trialMat_freeview];
         
-trialMat = [zeros(const.nb_trials,2)*nan, ...
+expDes.trialMat = [zeros(const.nb_trials,2)*nan, ...
             zeros(const.nb_trials,1)*0+const.runNum,...
             [1:const.nb_trials]',trialMat];   
 

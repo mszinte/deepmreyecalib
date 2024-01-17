@@ -22,6 +22,10 @@ function const = constConfig(scr, const)
 % Colors
 const.white = [1, 1, 1];
 const.black = [0,0,0];
+const.gray  = (const.white + const.black)/2;
+const.dark_gray = [0.3, 0.3, 0.3];
+const.fixation_color = const.dark_gray;
+const.background_color = const.gray; 
 
 
 % Time parameters
@@ -83,6 +87,19 @@ const.pursuit_angles = [0:const.pursuit_angles_steps:359];
 
 % freeview task
 const.freeview_pics = 10;
+const.freeview_path2pics = '.\stim\images';
+
+% get image paths
+path2pics = dir(fullfile(const.freeview_path2pics, 'image*'));
+% Check if path2pics is empty
+    if isempty(path2pics)
+        error('No images found in the specified folder.');
+    end
+const.path2pics = fullfile(path2pics(1).folder, {path2pics(:).name}');
+
+const.freeview_pic_z = const.window_size;
+const.freeview_picCoords = [scr.x_mid-const.freeview_pic_z/2 scr.y_mid-const.freeview_pic_z/2, scr.x_mid+const.freeview_pic_z/2 scr.y_mid+const.freeview_pic_z/2];
+
 
 % Trial settings
 const.nb_repeat_fixation = 2;
