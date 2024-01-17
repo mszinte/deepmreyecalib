@@ -25,39 +25,18 @@ scr = scrConfig(const);
 % Triggers and button configurations
 my_key = keyConfig(const);
 
-
 % Experimental constant
 const = constConfig(scr, const);
 
 % Experimental design
 expDes = designConfig(scr, const);
 
-% Audio configurations
-aud = audioConfig;
-
-% Open screen window
-PsychImaging('PrepareConfiguration');
-PsychImaging('AddTask', 'General', 'FloatingPoint32BitIfPossible');
-PsychImaging('AddTask', 'General', 'NormalizedHighresColorRange');
-[scr.main, scr.rect] = PsychImaging('OpenWindow', scr.scr_num, ...
-    const.background_color);
- 
-Screen('BlendFunction', scr.main, GL_ONE, GL_ONE);
-Priority(MaxPriority(scr.main));
-
-% Open sound pointer
-%aud.master_main = PsychPortAudio('Open', [], aud.master_mode, ...
-%    aud.master_reqlatclass, [], aud.master_nChannels);
-%PsychPortAudio('Start', aud.master_main, aud.master_rep, ...
-%   aud.master_when, aud.master_waitforstart);
-%PsychPortAudio('Volume', aud.master_main, aud.master_globalVol);
-%aud.stim_handle = PsychPortAudio('OpenSlave', aud.master_main, ...
-%   aud.slaveStim_mode);
-
-
-% Import Pictures 
-%const = importPics(const,scr);          % load images for picture viewing
-
+% Open screen windows
+[scr.main, scr.rect] = Screen('OpenWindow', scr.scr_num, ...
+    const.background_color, [], scr.clr_depth, 2);
+[~] = Screen('BlendFunction', scr.main, GL_SRC_ALPHA, ...
+    GL_ONE_MINUS_SRC_ALPHA);
+priorityLevel = MaxPriority(scr.main);Priority(priorityLevel);
 
 % Initialize eye tracker
 if const.tracker
@@ -67,7 +46,7 @@ else
 end
 
 % Trial runner
-const = runExp(scr, const, expDes, my_key, eyetrack, aud);
+const = runExp(scr, const, expDes, my_key, eyetrack);
 
 % End
 overDone(const, my_key);

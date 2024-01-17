@@ -18,7 +18,6 @@ function const = constConfig(scr, const)
 % Randomization
 [const.seed, const.whichGen] = ClockRandSeed;
 
-
 % Colors
 const.white = [1, 1, 1];
 const.black = [0,0,0];
@@ -26,7 +25,6 @@ const.gray  = (const.white + const.black)/2;
 const.dark_gray = [0.3, 0.3, 0.3];
 const.fixation_color = const.dark_gray;
 const.background_color = const.gray; 
-
 
 % Time parameters
 const.TR_sec = 1.2;                                                         % MRI time repetition in seconds
@@ -57,6 +55,7 @@ const.window_sizeVal = 14;
 % fixation task
 const.fixation_rows = 5;
 const.fixation_cols = 5;
+const.fixations_postions = const.fixation_rows * const.fixation_cols;
 const.window_size = vaDeg2pix(const.window_sizeVal, scr);
 
 const.fixation_coord_x = linspace(scr.x_mid - const.window_size/2, ...
@@ -81,6 +80,7 @@ end
 % pursuit task
 const.pursuit_ampVal = [3, 5, 7];
 const.pursuit_amp = vaDeg2pix(const.pursuit_ampVal, scr);
+const.pursuit_amps = length(const.pursuit_ampVal);
 
 const.pursuit_angles_steps = 20;
 const.pursuit_angles = [0:const.pursuit_angles_steps:359];
@@ -92,9 +92,9 @@ const.freeview_path2pics = '.\stim\images';
 % get image paths
 path2pics = dir(fullfile(const.freeview_path2pics, 'image*'));
 % Check if path2pics is empty
-    if isempty(path2pics)
-        error('No images found in the specified folder.');
-    end
+if isempty(path2pics)
+    error('No images found in the specified folder.');
+end
 const.path2pics = fullfile(path2pics(1).folder, {path2pics(:).name}');
 
 const.freeview_pic_z = const.window_size;
