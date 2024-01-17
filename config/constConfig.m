@@ -18,32 +18,31 @@ function const = constConfig(scr, const)
 % Randomization
 [const.seed, const.whichGen] = ClockRandSeed;
 
-
 % Colors
-const.white = [1, 1, 1];
-const.black = [0,0,0];
-const.gray  = (const.white + const.black)/2;
-const.dark_gray = [0.3, 0.3, 0.3];
-const.fixation_color = const.dark_gray;
+const.white = [255, 255, 255];
+const.gray = [128 128 128];
+const.fixation_color = const.white;
 const.background_color = const.gray; 
-
 
 % Time parameters
 const.TR_sec = 1.2;                                                         % MRI time repetition in seconds
 const.TR_frm = round(const.TR_sec/scr.frame_duration);                      % MRI time repetition in seconds in screen frames
 
 %new stimulus time parameters
-const.fixtask.dur_TR = 1;                                                       % Fixation task stimulus duration in scanner TR
-const.fixtask.dur_sec = const.fixtask.dur_TR * const.TR_sec;                    % Fixation task stimulus duration in seconds, should be 1.2
-const.fixtask.dur_frm = round(const.fixtask.dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
+const.fixtask_dur_TR = 1;                                                       % Fixation task stimulus duration in scanner TR
+const.fixtask_dur_sec = const.fixtask_dur_TR * const.TR_sec;                    % Fixation task stimulus duration in seconds, should be 1.2
+const.fixtask_dur_frm = round(const.fixtask_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
 
-const.pursuit.dur_TR = 1;                                                       % Smooth pursuit task stimulus duration in scanner TR
-const.pursuit.dur_sec = const.pursuit.dur_TR * const.TR_sec;                    % Smooth pursuit task stimulus duration in seconds, should be 1.2
-const.pursuit.dur_frm = round(const.pursuit.dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
+const.pursuit_dur_TR = 1;                                                       % Smooth pursuit task stimulus duration in scanner TR
+const.pursuit_dur_sec = const.pursuit_dur_TR * const.TR_sec;                    % Smooth pursuit task stimulus duration in seconds, should be 1.2
+const.pursuit_dur_frm = round(const.pursuit_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
 
-const.picTask.dur_TR = 3;                                                       % Picture free viewing task stimulus duration in scanner TR
-const.picTask.dur_sec = const.picTask.dur_TR * const.TR_sec;                    % Picture free viewing task stimulus duration in seconds, should be 1.2
-const.picTask.dur_frm = round(const.picTask.dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
+const.freeview_dur_TR = 3;                                                       % Picture free viewing task stimulus duration in scanner TR
+const.freeview_dur_sec = const.freeview_dur_TR * const.TR_sec;                    % Picture free viewing task stimulus duration in seconds, should be 1.2
+const.freeview_dur_frm = round(const.freeview_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
+
+
+const.fixtask_linspace(1, 50*const.fixtask_dur_frm+1, const.fixtask_dur_frm)
 
 %const.TRs = (const.fixtask.dur_TR+const.pursuit.dur_TR+const.picTask.dur_TR+const.triang.dur_TR)*2; % TR per trials
 
@@ -53,12 +52,19 @@ const.dpp = 1/const.ppd;         %degrees per pixel
 
 const.window_sizeVal = 14;
 
+% tasks
+const.task_txt = {'fixation', 'pursuit', 'freeviewing'};
 
 % fixation task
 const.fixation_rows = 5;
 const.fixation_cols = 5;
+const.fixations_postions = const.fixation_rows * const.fixation_cols;
 const.window_size = vaDeg2pix(const.window_sizeVal, scr);
-
+const.fixations_postions_txt = {'[-7.0; -7.0]', '[-3.5; -7.0]', '[    0; -7.0]', '[+3.5; -7.0]', '[+7.0; -7.0]', ...
+                                '[-7.0; -3.5]', '[-3.5; -3.5]', '[    0; -3.5]', '[+3.5; -3.5]', '[+7.0; -3.5]', ...
+                                '[-7.0;    0]', '[-3.5; -3.5]', '[    0; -3.5]', '[+3.5; -3.5]', '[+7.0; -3.5]', ...
+                                '[-7.0; +3.5]', '[-3.5; +3.5]', '[    0; +3.5]', '[+3.5; +3.5]', '[+7.0; +3.5]', ...
+                                '[-7.0; +7.0]', '[-3.5; +7.0]', '[    0; +7.0]', '[+3.5; +7.0]', '[+7.0; +7.0]'};
 const.fixation_coord_x = linspace(scr.x_mid - const.window_size/2, ...
                                   scr.x_mid + const.window_size/2, ...
                               const.fixation_cols);
@@ -77,29 +83,38 @@ for fix_cols = 1:const.fixation_cols
     end
 end
 
-
 % pursuit task
 const.pursuit_ampVal = [3, 5, 7];
+
 const.pursuit_amp = vaDeg2pix(const.pursuit_ampVal, scr);
+const.pursuit_amps = length(const.pursuit_ampVal);
+const.pursuit_amps_txt = {'3.0 dva', '5.0 dva', '7.0 dva'};
 
 const.pursuit_angles_steps = 20;
 const.pursuit_angles = [0:const.pursuit_angles_steps:359];
+const.pursuit_angles_txt = {'0 deg', '20 deg', '40 deg', '60 deg', ...
+                            '80 deg', '100 deg', '120 deg', '140 deg', ...
+                            '160 deg', '180 deg', '200 deg', '220 deg', ...
+                            '240 deg', '260 deg', '280 deg', '300 deg', ...
+                            '320 deg', '340 deg'};
 
 % freeview task
 const.freeview_pics = 10;
 const.freeview_path2pics = '.\stim\images';
+const.freeview_pics_txt = {'water_drops', 'coffee', 'finger', 'astronaut', ...
+                           'flat_iron', 'road', 'landscape', 'black swan', ...
+                           'dog', 'balloon'};
 
 % get image paths
 path2pics = dir(fullfile(const.freeview_path2pics, 'image*'));
 % Check if path2pics is empty
-    if isempty(path2pics)
-        error('No images found in the specified folder.');
-    end
+if isempty(path2pics)
+    error('No images found in the specified folder.');
+end
 const.path2pics = fullfile(path2pics(1).folder, {path2pics(:).name}');
 
 const.freeview_pic_z = const.window_size;
 const.freeview_picCoords = [scr.x_mid-const.freeview_pic_z/2 scr.y_mid-const.freeview_pic_z/2, scr.x_mid+const.freeview_pic_z/2 scr.y_mid+const.freeview_pic_z/2];
-
 
 % Trial settings
 const.nb_repeat_fixation = 2;
@@ -118,8 +133,6 @@ const.nb_trials = const.nb_trials_fixation + const.nb_trials_pursuit + ...
 
 
 
-% 
-% 
 % %Fixation Task (Calib Matthias)
 % const.fixtask.win_sz                                 =    10; %in degrees of visual angle 
 % const.fixtask.win_sz_px                              =    vaDeg2pix(const.fixtask.win_sz, scr);  %will return x y pixels

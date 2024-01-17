@@ -10,7 +10,7 @@
 
 % TODO (Sina)
 % -----------
-% Do instructions
+
 
 % First settings
 Screen('CloseAll'); clear all; clear mex; clear functions; close all; ...
