@@ -1,4 +1,4 @@
-function const = runExp(scr, const, expDes, my_key, eyetrack, aud)
+function const = runExp(scr, const, expDes, my_key, eyetrack)
 % ----------------------------------------------------------------------
 % const = runExp(scr, const, expDes, my_key, eyetrack)
 % ----------------------------------------------------------------------
@@ -11,7 +11,6 @@ function const = runExp(scr, const, expDes, my_key, eyetrack, aud)
 % expDes : struct containg experimental design
 % my_key : structure containing keyboard configurations
 % eyetrack : structure containing eyetracking configurations
-% aud : structure containing audio configurations
 % ----------------------------------------------------------------------
 % Output(s):
 % const : struct containing constant configurations
@@ -21,8 +20,7 @@ function const = runExp(scr, const, expDes, my_key, eyetrack, aud)
 
 % Configuration of videos
 if const.mkVideo
-    const.vid_folder = sprintf('others/movie/%s_v1-%i_v2-%i_r1-%i_r2-%i', ...
-        const.task, expDes.oneV, expDes.oneR);
+    const.vid_folder = sprintf('others/movie/%s', const.task);
     if ~isfolder(const.vid_folder); mkdir(const.vid_folder); end
     const.movie_image_file = sprintf('%s/img', const.vid_folder);
     const.movie_file = sprintf('%s.mp4', const.vid_folder);
@@ -32,19 +30,12 @@ if const.mkVideo
 	const.vid_obj.Quality = 100;
 end
 
-% Special instruction for scanner
-scanTxt = '';
-if const.scanner && ~const.scannerTest
-    scanTxt = '_Scanner';
-end
-
 % Save all config at start of the block
-config.scr  = scr;
+config.scr = scr;
 config.const = const;
 config.expDes = expDes;
 config.my_key = my_key;
 config.eyetrack = eyetrack;
-config.aud = aud;
 save(const.mat_file,'config');
 
 % First mouse config
@@ -61,8 +52,7 @@ if const.tracker
     eyeLinkClearScreen(eyetrack.bgCol);
     eyeLinkDrawText(scr.x_mid, scr.y_mid, eyetrack.txtCol,...
         'CALIBRATION INSTRUCTION - PRESS SPACE');
-    instructionsIm(scr, const, my_key, ...
-        sprintf('Calibration%s', scanTxt), 0);
+    instructionsIm(scr, const, my_key, 'Calibration', 0);
     calibresult = EyelinkDoTrackerSetup(eyetrack);
     if calibresult == eyetrack.TERMINATE_KEY
         return
@@ -101,90 +91,30 @@ while ~record
 end
 
 % Task instructions 
-% fprintf(1,'\n\tTask instructions -press space or right1 button-');
-% if const.tracker
-%     eyeLinkClearScreen(eyetrack.bgCol);
-%     eyeLinkDrawText(scr.x_mid, scr.y_mid, eyetrack.txtCol, ...
-%         'TASK INSTRUCTIONS - PRESS SPACE')
-% end
-% instructionsIm(scr, const, my_key, ...
-%     sprintf('instr_%s', const.task), 0);
-% for keyb = 1:size(my_key.keyboard_idx, 2)
-%     KbQueueFlush(my_key.keyboard_idx(keyb));
-% end
-% fprintf(1,'\n\n\tBUTTON PRESSED BY SUBJECT\n');
+fprintf(1,'\n\tTask instructions -press space or right1 button-');
+if const.tracker
+    eyeLinkClearScreen(eyetrack.bgCol);
+    eyeLinkDrawText(scr.x_mid, scr.y_mid, eyetrack.txtCol, ...
+        'TASK INSTRUCTIONS - PRESS SPACE')
+end
+instructionsIm(scr, const, my_key, const.task, 0);
+for keyb = 1:size(my_key.keyboard_idx, 2)
+    KbQueueFlush(my_key.keyboard_idx(keyb));
+end
+fprintf(1,'\n\n\tBUTTON PRESSED BY SUBJECT\n');
 
 % Write on eyetracking screen
 if const.tracker
     drawTrialInfoEL(scr, const)
 end
 
-
-%trial loop (to be in runTrials?)
-for t = 1:114
-    Screen('FillRect',scr.main,const.background_color)
-    if t <= 50
-        %fixation task
-        frames_fixation = 1:const.fixtask.dur_sec*scr.hz+1;
-        for frame = frames_fixation
-            drawBullsEye(scr, const, const.fixation_coords(expDes.trialMat(t,6),1), const.fixation_coords(expDes.trialMat(t,6),2), 'int1')  
-            Screen('DrawingFinished', scr.main);
-            vbl = Screen('Flip', scr.main);   %save timestamp
-        end
+% Trial loop
+expDes = runTrials(scr, const, expDes, my_key);
     
-    elseif t <= 104
-        %purusit task
-        t_pur = 1
-        frames_pursuit = 1:const.pursuit.dur_sec*scr.hz+1;
-        while t_pur <= 54
-            for frame = frames_pursuit
-                    drawBullsEye(scr, const, expDes.pursuitcoords{t_pur}(frame,1), expDes.pursuitcoords{t_pur}(frame,2), 'int1')
-                    Screen('DrawingFinished', scr.main);
-                    vbl = Screen('Flip', scr.main);   %save timestamp
-                    t_pur = t_pur + 1
-            end
-        end   
-    else
-        %free viewing task
-        const.freeview_pic_nums = cell2mat(arrayfun(@(x) Screen('MakeTexture', scr.main, imread(const.path2pics{x})), 1:const.freeview_pics, 'uni', 0)) %import pictures by making textures
-        Screen('DrawTexture', scr.main, const.freeview_pic_nums(expDes.trialMat(t,9)), [],const.freeview_picCoords);
-        Screen('DrawingFinished', scr.main);
-        vbl = Screen('Flip', scr.main);   %save timestamp
-
-    end
-end
-
-
-
-%frames_fix = 1:const.fixtask.dur_sec*scr.hz+1;
-% for trial = 1:numel(const.fixtask.xy_trials)
-%     for cFrame = 1:numel(frames_fix)
-%         expDes.trial = trial;
-%         expDes = runTrials_fix(scr, const, cFrame, expDes, my_key, aud);
-%     end
-% end
-% 
-% frames_purs = 1:const.pursuit.dur_frm*scr.hz+1;
-% disp(['frames purs ', num2str(numel(frames_purs))])
-% disp(['num trials purs', num2str(numel(const.pursuit.xy_trials_pursuit))])
-% if numel(frames_purs) == numel(const.pursuit.xy_trials_pursuit)
-%     disp("yay right size")
-%     for trial = 1:numel(const.pursuit.xy_trials_pursuit)  %need to keep t running, but wont be able to index if I let it be from const.fixtask.xy_trials:const.pursuit.xy_trials
-%         for cFrame = 1:numel(frames_purs)
-%             expDes.trial = trial;
-%             expDes = runTrials_pursuit(scr, const, cFrame, expDes, my_key, aud);
-%         end
-%     end
-% end
-% 
-% for trial = const.nb_trials_fix:const.nb_trials_pic
-%     expDes.trial = trial;
-%     expDes = runTrials_picture(scr, const, expDes, my_key, aud);
-% end
-
 %tsv file
 head_txt = {'onset', 'duration', 'run_number', 'trial_number', ...
-    'task','fixation location', 'pursuit amplitude', 'pursuit angle', 'image id'};  
+            'task', 'fixation_location', 'pursuit_amplitude', ...
+            'pursuit_angle', 'image_id'};
 % 01 : onset
 % 02 : duration 
 % 03 : run number
@@ -194,7 +124,6 @@ head_txt = {'onset', 'duration', 'run_number', 'trial_number', ...
 % 07 : pursuit amplitude
 % 08 : pursuit angle
 % 09 : freeview imager number
-
 for head_num = 1:length(head_txt)
     behav_txt_head{head_num} = head_txt{head_num};
     behav_mat_res{head_num} = expDes.expMat(:,head_num);
@@ -234,15 +163,14 @@ for trial = 1:const.nb_trials
 end
 
 % End messages
-instructionsIm(scr,const,my_key,'End',1);  %show end screen image
+instructionsIm(scr,const,my_key,'End',1); 
 
 % Save all config at the end of the block (overwrite start made at start)
 config.scr = scr; 
 config.const = const; 
-config.expDes = expDes;...
+config.expDes = expDes;
 config.my_key = my_key;
 config.eyetrack = eyetrack;
-config.aud = aud;
 save(const.mat_file,'config');
 
 % Stop Eyetracking

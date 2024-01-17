@@ -33,16 +33,16 @@ const.fixtask_dur_TR = 1;                                                       
 const.fixtask_dur_sec = const.fixtask_dur_TR * const.TR_sec;                    % Fixation task stimulus duration in seconds, should be 1.2
 const.fixtask_dur_frm = round(const.fixtask_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
 
-const.pursuit_dur_TR = 1;                                                       % Smooth pursuit task stimulus duration in scanner TR
-const.pursuit_dur_sec = const.pursuit_dur_TR * const.TR_sec;                    % Smooth pursuit task stimulus duration in seconds, should be 1.2
-const.pursuit_dur_frm = round(const.pursuit_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
+const.pursuit.dur_TR = 1;                                                       % Smooth pursuit task stimulus duration in scanner TR
+const.pursuit.dur_sec = const.pursuit.dur_TR * const.TR_sec;                    % Smooth pursuit task stimulus duration in seconds, should be 1.2
+const.pursuit.dur_frm = round(const.pursuit.dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
 
-const.freeview_dur_TR = 3;                                                       % Picture free viewing task stimulus duration in scanner TR
-const.freeview_dur_sec = const.freeview_dur_TR * const.TR_sec;                    % Picture free viewing task stimulus duration in seconds, should be 1.2
-const.freeview_dur_frm = round(const.freeview_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
+const.picTask.dur_TR = 3;                                                       % Picture free viewing task stimulus duration in scanner TR
+const.picTask.dur_sec = const.picTask.dur_TR * const.TR_sec;                    % Picture free viewing task stimulus duration in seconds, should be 1.2
+const.picTask.dur_frm = round(const.picTask.dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
 
 
-const.fixtask_linspace(1, 50*const.fixtask_dur_frm+1, const.fixtask_dur_frm)
+const.fixtask_onset_linspace(1, 50*const.fixtask_dur_frm+1, const.fixtask_dur_frm)
 
 %const.TRs = (const.fixtask.dur_TR+const.pursuit.dur_TR+const.picTask.dur_TR+const.triang.dur_TR)*2; % TR per trials
 

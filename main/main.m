@@ -40,7 +40,7 @@ priorityLevel = MaxPriority(scr.main);Priority(priorityLevel);
 
 % Initialize eye tracker
 if const.tracker
-    eyetrack = initEyeLink(scr,const);
+    eyetrack = initEyeLink(scr, const);
 else
     eyetrack = [];
 end
