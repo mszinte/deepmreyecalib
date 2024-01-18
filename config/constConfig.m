@@ -31,7 +31,7 @@ const.TR_frm = round(const.TR_sec/scr.frame_duration);                      % MR
 %new stimulus time parameters
 const.fixtask_dur_TR = 1;                                                       % Fixation task stimulus duration in scanner TR
 const.fixtask_dur_sec = const.fixtask_dur_TR * const.TR_sec;                    % Fixation task stimulus duration in seconds, should be 1.2
-const.fixtask_dur_frm = round(const.fixtask_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
+const.fixtask_dur_frm = round(const.fixtask_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames  (72)
 
 const.pursuit_dur_TR = 1;                                                       % Smooth pursuit task stimulus duration in scanner TR
 const.pursuit_dur_sec = const.pursuit_dur_TR * const.TR_sec;                    % Smooth pursuit task stimulus duration in seconds, should be 1.2
@@ -42,9 +42,10 @@ const.freeview_dur_sec = const.freeview_dur_TR * const.TR_sec;                  
 const.freeview_dur_frm = round(const.freeview_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
 
 
-const.fixtask_linspace(1, 50*const.fixtask_dur_frm+1, const.fixtask_dur_frm)
+const.fixtask_onsets = linspace(1, const.fixtask_dur_frm*2, 50*const.fixtask_dur_frm+1);
 
 %const.TRs = (const.fixtask.dur_TR+const.pursuit.dur_TR+const.picTask.dur_TR+const.triang.dur_TR)*2; % TR per trials
+
 
 % Stim parameters
 [const.ppd] = vaDeg2pix(1, scr); % one pixel per dva
@@ -98,6 +99,7 @@ const.pursuit_angles_txt = {'0 deg', '20 deg', '40 deg', '60 deg', ...
                             '240 deg', '260 deg', '280 deg', '300 deg', ...
                             '320 deg', '340 deg'};
 
+
 % freeview task
 const.freeview_pics = 10;
 const.freeview_path2pics = '.\stim\images';
@@ -130,6 +132,7 @@ const.nb_trials_freeview = const.freeview_pics;
 
 const.nb_trials = const.nb_trials_fixation + const.nb_trials_pursuit + ...
     const.nb_trials_freeview;
+
 
 
 

@@ -63,7 +63,6 @@ end
 trialMat_fixation = trialMat_fixation(randperm(const.nb_trials_fixation),:);
 
 % Pursuit experimental loop
-fix_dur = round(const.pursuit.dur_sec*scr.hz);
 ii = 0;
 trialMat_pursuit = zeros(const.nb_trials_pursuit, expDes.nb_var+1)*nan;
 for rep = 1:const.nb_repeat_pursuit
@@ -110,6 +109,7 @@ for trial_pursuit = 1:const.nb_trials_pursuit
     pursuit_coords_on = [pursuit_coords_on; pursuit_coord_on];
     pursuit_coords_off = [pursuit_coords_off; pursuit_coord_off];
     
+   
 end
 
 % Freeview experimental loop
@@ -130,7 +130,7 @@ trialMat = [trialMat_fixation; ...
     trialMat_pursuit; ...
     trialMat_freeview];
 
-expDes.trialMat = [zeros(const.nb_trials,2)*nan, ...
+expDes.expMat = [zeros(const.nb_trials,2)*nan, ...
     zeros(const.nb_trials,1)*0+const.runNum,...
     [1:const.nb_trials]',trialMat];
 
