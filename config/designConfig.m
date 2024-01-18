@@ -15,6 +15,12 @@ function expDes = designConfig(scr, const)
 % Function created by Martin SZINTE (martin.szinte@gmail.com)
 % ----------------------------------------------------------------------
 
+% Experimental condition
+% 01 - intertrial interval
+% 02 - fixation task
+% 03 - pursuit task
+% 04 - freeview task
+
 % Experimental variables
 % Var 1: fixation location
 expDes.oneV = [1:1:const.fixations_postions]';
@@ -51,16 +57,22 @@ expDes.nb_var4 = length(expDes.fourV);
 expDes.nb_var = 4;
 
 % Fixation experimental loop
-ii = 0;
-trialMat_fixation = zeros(const.nb_trials_fixation, expDes.nb_var+1)*nan;
-for rep = 1:const.nb_repeat_fixation
-    for var1 = 1:expDes.nb_var1
-        ii = ii + 1;
-        trialMat_fixation(ii, 1) = 1;
-        trialMat_fixation(ii, 2) = var1;
+trial_repeat = 1;
+while trial_repeat
+    ii = 0;
+    trialMat_fixation = zeros(const.nb_trials_fixation, expDes.nb_var+1)*nan;
+    for rep = 1:const.nb_repeat_fixation
+        for var1 = 1:expDes.nb_var1
+            ii = ii + 1;
+            trialMat_fixation(ii, 1) = 2;
+            trialMat_fixation(ii, 2) = var1;
+        end
     end
+    trialMat_fixation = trialMat_fixation(randperm(const.nb_trials_fixation),:);
+    trial_repeat = sum(diff(trialMat_fixation(:,2))==0);
 end
-trialMat_fixation = trialMat_fixation(randperm(const.nb_trials_fixation),:);
+trialMat_fixation = [1, nan, nan, nan, nan; % add intertrial interval
+                     trialMat_fixation];    
 
 % Pursuit experimental loop
 ii = 0;
@@ -69,7 +81,7 @@ for rep = 1:const.nb_repeat_pursuit
     for var2 = 1:expDes.nb_var2
         for var3 = 1:expDes.nb_var3
             ii = ii + 1;
-            trialMat_pursuit(ii, 1) = 2;
+            trialMat_pursuit(ii, 1) = 3;
             trialMat_pursuit(ii, 3) = var2;
             trialMat_pursuit(ii, 4) = var3; % redefined after to keep the dot in the screen
         end
@@ -89,6 +101,9 @@ for trial_pursuit = 1:const.nb_trials_pursuit
             pursuit_coord_on = [scr.x_mid, scr.y_mid];
             pursuit_coord_off = [scr.x_mid + pursuit_amp * cosd(pursuit_angle),...
                 scr.y_mid + pursuit_amp * sind(pursuit_angle)];
+        elseif trial_pursuit == const.nb_trials_pursuit
+            pursuit_coord_on = pursuit_coords_off(trial_pursuit-1, :);
+            pursuit_coord_off = [scr.x_mid, scr.y_mid];
         else
             pursuit_coord_on = pursuit_coords_off(trial_pursuit-1, :);
             pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
@@ -108,9 +123,10 @@ for trial_pursuit = 1:const.nb_trials_pursuit
     end
     pursuit_coords_on = [pursuit_coords_on; pursuit_coord_on];
     pursuit_coords_off = [pursuit_coords_off; pursuit_coord_off];
-    
-   
 end
+trialMat_pursuit = [1, nan, nan, nan, nan; % add intertrial interval
+                    trialMat_pursuit];
+
 
 % Freeview experimental loop
 ii = 0;
@@ -118,12 +134,13 @@ trialMat_freeview = zeros(const.nb_trials_freeview, expDes.nb_var+1)*nan;
 for rep = 1:const.nb_repeat_freeview
     for var4 = 1:expDes.nb_var4
         ii = ii + 1;
-        trialMat_freeview(ii, 1) = 3;
+        trialMat_freeview(ii, 1) = 4;
         trialMat_freeview(ii, 5) = var4;
     end
 end
 trialMat_freeview = trialMat_freeview(randperm(const.nb_trials_freeview),:);
-
+trialMat_freeview = [1, nan, nan, nan, nan; % add intertrial interval
+                     trialMat_freeview];    
 
 % Define main matrix
 trialMat = [trialMat_fixation; ...

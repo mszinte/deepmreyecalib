@@ -29,43 +29,40 @@ const.TR_sec = 1.2;                                                         % MR
 const.TR_frm = round(const.TR_sec/scr.frame_duration);                      % MRI time repetition in seconds in screen frames
 
 %new stimulus time parameters
-const.fixtask_dur_TR = 1;                                                       % Fixation task stimulus duration in scanner TR
-const.fixtask_dur_sec = const.fixtask_dur_TR * const.TR_sec;                    % Fixation task stimulus duration in seconds, should be 1.2
-const.fixtask_dur_frm = round(const.fixtask_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames  (72)
+const.iti_dur_TR = 5;                                                       % Inter trial interval duration in scanner TR
+const.iti_dur_sec = const.iti_dur_TR * const.TR_sec;                        % Inter trial interval duration in seconds
+const.iti_dur_frm = round(const.iti_dur_sec / scr.frame_duration);          % Inter trial interval in screen frames
 
-const.pursuit_dur_TR = 1;                                                       % Smooth pursuit task stimulus duration in scanner TR
-const.pursuit_dur_sec = const.pursuit_dur_TR * const.TR_sec;                    % Smooth pursuit task stimulus duration in seconds, should be 1.2
-const.pursuit_dur_frm = round(const.pursuit_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
+const.fixtask_dur_TR = 1;                                                   % Fixation task stimulus duration in scanner TR
+const.fixtask_dur_sec = const.fixtask_dur_TR * const.TR_sec;                % Fixation task stimulus duration in seconds
+const.fixtask_dur_frm = round(const.fixtask_dur_sec / scr.frame_duration);  % Fixation task stimulus duration in screen frames
 
-const.freeview_dur_TR = 3;                                                       % Picture free viewing task stimulus duration in scanner TR
-const.freeview_dur_sec = const.freeview_dur_TR * const.TR_sec;                    % Picture free viewing task stimulus duration in seconds, should be 1.2
-const.freeview_dur_frm = round(const.freeview_dur_sec /scr.frame_duration);       % Total stimulus duration in screen frames
+const.pursuit_dur_TR = 5;                                                   % Smooth pursuit task stimulus duration in scanner TR
+const.pursuit_dur_sec = const.pursuit_dur_TR * const.TR_sec;                % Smooth pursuit task stimulus duration in seconds
+const.pursuit_dur_frm = round(const.pursuit_dur_sec / scr.frame_duration);  % Smooth pursuit task stimulus duration in screen frames
 
-
-const.fixtask_onsets = linspace(1, const.fixtask_dur_frm*2, 50*const.fixtask_dur_frm+1);
-
-%const.TRs = (const.fixtask.dur_TR+const.pursuit.dur_TR+const.picTask.dur_TR+const.triang.dur_TR)*2; % TR per trials
-
+const.freeview_dur_TR = 3;                                                  % Picture free viewing task stimulus duration in scanner TR
+const.freeview_dur_sec = const.freeview_dur_TR * const.TR_sec;              % Picture free viewing task stimulus duration in seconds
+const.freeview_dur_frm = round(const.freeview_dur_sec / scr.frame_duration);% Picture free viewing task stimulus duration in screen frames
 
 % Stim parameters
-[const.ppd] = vaDeg2pix(1, scr); % one pixel per dva
-const.dpp = 1/const.ppd;         %degrees per pixel
-
-const.window_sizeVal = 14;
+[const.ppd] = vaDeg2pix(1, scr);                                            % one pixel per dva
+const.dpp = 1/const.ppd;                                                    % degrees per pixel
+const.window_sizeVal = 14;                                                  % side of the display window
 
 % tasks
-const.task_txt = {'fixation', 'pursuit', 'freeviewing'};
+const.task_txt = {'inter-trial interval', 'fixation', 'pursuit', 'freeviewing'};
 
 % fixation task
 const.fixation_rows = 5;
 const.fixation_cols = 5;
 const.fixations_postions = const.fixation_rows * const.fixation_cols;
 const.window_size = vaDeg2pix(const.window_sizeVal, scr);
-const.fixations_postions_txt = {'[-7.0; -7.0]', '[-3.5; -7.0]', '[    0; -7.0]', '[+3.5; -7.0]', '[+7.0; -7.0]', ...
-                                '[-7.0; -3.5]', '[-3.5; -3.5]', '[    0; -3.5]', '[+3.5; -3.5]', '[+7.0; -3.5]', ...
-                                '[-7.0;    0]', '[-3.5; -3.5]', '[    0; -3.5]', '[+3.5; -3.5]', '[+7.0; -3.5]', ...
-                                '[-7.0; +3.5]', '[-3.5; +3.5]', '[    0; +3.5]', '[+3.5; +3.5]', '[+7.0; +3.5]', ...
-                                '[-7.0; +7.0]', '[-3.5; +7.0]', '[    0; +7.0]', '[+3.5; +7.0]', '[+7.0; +7.0]'};
+const.fixations_postions_txt = {'[-7.0; +7.0]', '[-3.5; +7.0]', '[   0; +7.0]', '[+3.5; +7.0]', '[+7.0; +7.0]', ...
+                                '[-7.0; +3.5]', '[-3.5; +3.5]', '[   0; +3.5]', '[+3.5; +3.5]', '[+7.0; +3.5]', ...
+                                '[-7.0;    0]', '[-3.5;    0]', '[   0;    0]', '[+3.5;    0]', '[+7.0;    0]', ...
+                                '[-7.0; -3.5]', '[-3.5; -3.5]', '[   0; -3.5]', '[+3.5; -3.5]', '[+7.0; -3.5]', ...
+                                '[-7.0; -7.0]', '[-3.5; -7.0]', '[   0; -7.0]', '[+3.5; -7.0]', '[+7.0; -7.0]'};
 const.fixation_coord_x = linspace(scr.x_mid - const.window_size/2, ...
                                   scr.x_mid + const.window_size/2, ...
                               const.fixation_cols);
@@ -102,7 +99,9 @@ const.pursuit_angles_txt = {'0 deg', '20 deg', '40 deg', '60 deg', ...
 
 % freeview task
 const.freeview_pics = 10;
-const.freeview_path2pics = '.\stim\images';
+if ismac; const.freeview_path2pics = './stim/images';
+else; const.freeview_path2pics = '.\stim\images';
+end
 const.freeview_pics_txt = {'water_drops', 'coffee', 'finger', 'astronaut', ...
                            'flat_iron', 'road', 'landscape', 'black swan', ...
                            'dog', 'balloon'};
@@ -119,7 +118,7 @@ const.freeview_pic_z = const.window_size;
 const.freeview_picCoords = [scr.x_mid-const.freeview_pic_z/2 scr.y_mid-const.freeview_pic_z/2, scr.x_mid+const.freeview_pic_z/2 scr.y_mid+const.freeview_pic_z/2];
 
 % Trial settings
-const.nb_repeat_fixation = 2;
+const.nb_repeat_fixation = 1;
 const.nb_trials_fixation = const.fixation_rows * const.fixation_cols ...
     * const.nb_repeat_fixation;
 
@@ -130,33 +129,10 @@ const.nb_trials_pursuit = length(const.pursuit_ampVal) * ...
 const.nb_repeat_freeview = 1;
 const.nb_trials_freeview = const.freeview_pics;
 
+const.nb_trials_iti = 3;
+
 const.nb_trials = const.nb_trials_fixation + const.nb_trials_pursuit + ...
-    const.nb_trials_freeview;
-
-
-
-
-% %Fixation Task (Calib Matthias)
-% const.fixtask.win_sz                                 =    10; %in degrees of visual angle 
-% const.fixtask.win_sz_px                              =    vaDeg2pix(const.fixtask.win_sz, scr);  %will return x y pixels
-% const.fixtask.n_locs                                 =    [5 5]; % n fixation locations [horizontal, vertical] [10 10]
-% const                                                =    getFixLocations(const,scr); %create coordinates for fixation locations
-% 
-% %Smooth Pursuit Task (Calib Matthias) 
-% const.pursuit.win_sz         =    14;
-% const.pursuit.win_sz_px      =    vaDeg2pix(const.pursuit.win_sz, scr);
-% const.pursuit.angles         =    [0:20:359];
-% const.pursuit.mov_amp        =    [3 5 7];
-% % valid = 0; while ~valid
-% %     [const, valid]           =    getFixLocations_pursuit(const,scr,valid); end % create trajectories for smoooth pursuit
-% 
-% %Picture Free Viewing Task (Calib Matthias) 
-% const.picTask.pic_sz         =   14;
-% const.picTask.pic_sz_px      =   vaDeg2pix(const.picTask.pic_sz, scr);
-% const.picTask.path2pics      =   fullfile('./stim/images'); 
-% const.picTask.n_pics         =   10; % how many of the pictures in the folder should be shown (random selection)? (10)
-
-
+    const.nb_trials_freeview + const.nb_trials_iti;
 
 % define total TR numbers and scan duration
 if const.scanner
