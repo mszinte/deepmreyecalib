@@ -18,7 +18,7 @@ function expDes = runTrials(scr, const, expDes, my_key)
 % Function created by Martin SZINTE (martin.szinte@gmail.com)
 % ----------------------------------------------------------------------
 
-
+first_pursuit_trial = 1;
 for t = 1:const.nb_trials
 
     % Open video
@@ -33,70 +33,73 @@ for t = 1:const.nb_trials
     var3 = expDes.expMat(t, 8);
     var4 = expDes.expMat(t, 9);
 
-
+    % Check trial
+    if const.checkTrial && const.expStart == 0
+        fprintf(1,'\n\n\t============= TRIAL %3.0f ==============\n',t);
+        fprintf(1,'\n\tTask =             \t%s', const.task_txt{task});
+        if ~isnan(var1); fprintf(1,'\n\tFixation location =\t%s', ...
+                const.fixations_postions_txt{var1}); end
+        if ~isnan(var2); fprintf(1,'\n\tPursuit amplitude =\t%s', ...
+                const.pursuit_amps_txt{var2}); end
+        if ~isnan(var3); fprintf(1,'\n\tPursuit angle =    \t%s', ...
+                const.pursuit_angles_txt{var3}); end
+        if ~isnan(var4); fprintf(1,'\n\tPicture =          \t%s', ...
+                const.freeview_pics_txt{var4}); end
+    end
+    
     % Timing
-    fix_onset_nbf = 1;
-    fix_offset_nbf = const.fixtask_dur_frm;
-    pursuit_onset_nbf = 1;
-    pursuit_offset_nbf = const.pursuit_dur_frm;
-    freeview_onset_nbf = 1;
-    freeview_offset_nbf = const.freeview_dur_frm;
-    
     switch task
-        case 1 
-            trial_offset = const.fixtask_dur_frm + 1;
+        case 1
+            iti_onset_nbf = 1;
+            iti_offset_nbf = const.iti_dur_frm;
+            trial_offset = iti_offset_nbf;
         case 2
-            trial_offset = const.pursuit_dur_frm + 1;
+            fix_onset_nbf = 1;
+            fix_offset_nbf = const.fixtask_dur_frm;
+            trial_offset = fix_offset_nbf;
         case 3
-            trial_offset = const.freeview_dur_frm + 1;
+            pursuit_onset_nbf = 1;
+            pursuit_offset_nbf = const.pursuit_dur_frm;
+            trial_offset = pursuit_offset_nbf;
+        case 4
+            freeview_onset_nbf = 1;
+            freeview_offset_nbf = const.freeview_dur_frm;
+            trial_offset = freeview_offset_nbf;
     end
     
-    % compute fixation coordinates
+    % Compute fixation coordinates
     if task == 1
-        fix_x = const.fixation_coords(var1,1);
-        fix_y = const.fixation_coords(var1,2);
+        iti_x = scr.x_mid;
+        iti_y = scr.y_mid;
+    end
+    
+    % Compute fixation coordinates
+    if task == 2
+        fix_x = const.fixation_coords(var1, 1);
+        fix_y = const.fixation_coords(var1, 2);
     end
 
-    %compute pursuit coordinates each trial
-    if task == 2
-        pursuit_coords_on = [];
-        pursuit_coords_off = [];
+    % Compute pursuit coordinates
+    if task == 3
         pursuit_amp = const.pursuit_amp(var2);
         pursuit_angle = const.pursuit_angles(var3);
         
-        %for trial_pursuit = 1:const.nb_trials_pursuit
-        if trial_pursuit == 1
+        if first_pursuit_trial
+            first_pursuit_trial = 0;
             pursuit_coord_on = [scr.x_mid, scr.y_mid];
-            pursuit_coord_off = [scr.x_mid + pursuit_amp * cosd(pursuit_angle),...
-                scr.y_mid + pursuit_amp * sind(pursuit_angle)];
         else
-            pursuit_coord_on = pursuit_coords_off(trial_pursuit-1, :);
-            pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
-                pursuit_amp * sind(pursuit_angle)];
+            pursuit_coord_on = pursuit_coord_off;
         end
-        pursuit_coords_on = [pursuit_coords_on; pursuit_coord_on]; 
-        pursuit_coords_off = [pursuit_coords_off; pursuit_coord_off]; 
+        pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
+                                                pursuit_amp * sind(pursuit_angle)];
 
-        %end
-        
-        %interpolate
-        purs_x = linspace(pursuit_coords_on(1), pursuit_coords_off(1), const.pursuit_dur_sec* scr.hz+1);
-        purs_y = linspace(pursuit_coords_on(2), pursuit_coords_off(2), const.pursuit_dur_sec* scr.hz+1);
-
-   
-       
-        
+        purs_x = linspace(pursuit_coord_on(1), pursuit_coord_off(1), const.pursuit_dur_frm);
+        purs_y = linspace(pursuit_coord_on(2), pursuit_coord_off(2), const.pursuit_dur_frm);
     end
-
     
-    % Check trial
-    if const.checkTrial && const.expStart == 0
-    fprintf(1,'\n\n\t============= TRIAL %3.0f ==============\n',t);
-    fprintf(1,'\n\tTask =             \t%s', const.task_txt{task});
-    fprintf(1,'\n\tFixation location =\t%s', const.fixations_postions_txt{var1});
-    fprintf(1,'\n\tPursuit amplitude =\t%s', const.pursuit_amps_txt{var2});
-    fprintf(1,'\n\tPursuit angle =    \t%s', const.pursuit_angles_txt{var3});
-    fprintf(1,'\n\tPicture =          \t%s', const.freeview_pics_txt{var4});
+    % Get freeview image
+    if task == 4
+        % get the right image
     end
 
     % Wait first MRI trigger
@@ -152,46 +155,43 @@ for t = 1:const.nb_trials
         Eyelink('message', '%s', sprintf('trial %i started\n', t));
     end
     
-    % 
+    % Main diplay loop
     nbf = 0;
-    while nbf <= trial_offset
+    while nbf < trial_offset
         % Flip count
         nbf = nbf + 1;
     
-        Screen('FillRect',scr.main,const.background_color)
+        Screen('FillRect', scr.main, const.background_color)
     
-        % Fixation task
+        % Inter-trial interval
         if task == 1
+            if nbf >= iti_onset_nbf && nbf <= iti_offset_nbf 
+                drawBullsEye(scr, const, iti_x, iti_y);
+            end
+        end
+        
+        % Fixation task
+        if task == 2
             if nbf >= fix_onset_nbf && nbf <= fix_offset_nbf
                 drawBullsEye(scr, const, fix_x, fix_y);
             end
         end
         
         % Pursuit task
-        if task == 2
+        if task == 3
             if nbf >= pursuit_onset_nbf && nbf <= pursuit_offset_nbf
                 drawBullsEye(scr, const, purs_x(nbf), purs_y(nbf));
             end
         end
         
         % Freeview task
-%         if task == 3
-%             if nbf >= freeview_onset_nbf && nbf <= freeview_offset_nbf
-%                 % draw image
-%             end
-%         end
+        if task == 4
+            if nbf >= freeview_onset_nbf && nbf <= freeview_offset_nbf
+                % draw image
+            end
+        end
         
-        vbl = Screen('Flip',scr.main);      
+        vbl = Screen('Flip', scr.main);
     end
-
-      
-
-
-
-%if resp_conf == 0
-%    expDes.expMat(t, 13) = 0;
-%    expDes.expMat(t, 14) = 0;
-%end
-
     
 end
