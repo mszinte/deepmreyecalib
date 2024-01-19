@@ -100,14 +100,14 @@ for trial_pursuit = 1:const.nb_trials_pursuit
         if trial_pursuit == 1
             pursuit_coord_on = [scr.x_mid, scr.y_mid];
             pursuit_coord_off = [scr.x_mid + pursuit_amp * cosd(pursuit_angle),...
-                scr.y_mid + pursuit_amp * sind(pursuit_angle)];
+                                 scr.y_mid + pursuit_amp * -sind(pursuit_angle)];
         elseif trial_pursuit == const.nb_trials_pursuit
             pursuit_coord_on = pursuit_coords_off(trial_pursuit-1, :);
             pursuit_coord_off = [scr.x_mid, scr.y_mid];
         else
             pursuit_coord_on = pursuit_coords_off(trial_pursuit-1, :);
             pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
-                pursuit_amp * sind(pursuit_angle)];
+                                                    pursuit_amp * -sind(pursuit_angle)];
         end
         
         % if fixation point leaves calibration window select another angle
@@ -139,13 +139,15 @@ for rep = 1:const.nb_repeat_freeview
     end
 end
 trialMat_freeview = trialMat_freeview(randperm(const.nb_trials_freeview),:);
-trialMat_freeview = [1, nan, nan, nan, nan; % add intertrial interval
-                     trialMat_freeview];    
+trialMat_freeview = [1, nan, nan, nan, nan; ... % add intertrial interval
+                     trialMat_freeview; ...
+                     1, nan, nan, nan, nan; % add end interval
+                     ];    
 
 % Define main matrix
 trialMat = [trialMat_fixation; ...
-    trialMat_pursuit; ...
-    trialMat_freeview];
+            trialMat_pursuit; ...
+            trialMat_freeview];
 
 expDes.expMat = [zeros(const.nb_trials,2)*nan, ...
     zeros(const.nb_trials,1)*0+const.runNum,...
