@@ -37,7 +37,7 @@ const.fixtask_dur_TR = 1;                                                   % Fi
 const.fixtask_dur_sec = const.fixtask_dur_TR * const.TR_sec;                % Fixation task stimulus duration in seconds
 const.fixtask_dur_frm = round(const.fixtask_dur_sec / scr.frame_duration);  % Fixation task stimulus duration in screen frames
 
-const.pursuit_dur_TR = 5;                                                   % Smooth pursuit task stimulus duration in scanner TR
+const.pursuit_dur_TR = 1;                                                   % Smooth pursuit task stimulus duration in scanner TR
 const.pursuit_dur_sec = const.pursuit_dur_TR * const.TR_sec;                % Smooth pursuit task stimulus duration in seconds
 const.pursuit_dur_frm = round(const.pursuit_dur_sec / scr.frame_duration);  % Smooth pursuit task stimulus duration in screen frames
 
@@ -102,41 +102,50 @@ const.freeview_pics = 10;
 if ismac; const.freeview_path2pics = './stim/images';
 else; const.freeview_path2pics = '.\stim\images';
 end
-const.freeview_pics_txt = {'water_drops', 'coffee', 'finger', 'astronaut', ...
+const.freeview_pics_txt = {'water_drops', 'coffee', 'hands', 'astronaut', ...
                            'flat_iron', 'road', 'landscape', 'black swan', ...
                            'dog', 'balloon'};
 
 % get image paths
 path2pics = dir(fullfile(const.freeview_path2pics, 'image*'));
-% Check if path2pics is empty
-if isempty(path2pics)
-    error('No images found in the specified folder.');
-end
 const.path2pics = fullfile(path2pics(1).folder, {path2pics(:).name}');
-
-const.freeview_pic_z = const.window_size;
-const.freeview_picCoords = [scr.x_mid-const.freeview_pic_z/2 scr.y_mid-const.freeview_pic_z/2, scr.x_mid+const.freeview_pic_z/2 scr.y_mid+const.freeview_pic_z/2];
+for pic_num = 1:length(const.path2pics)
+    const.free_view_pic(:,:,:,pic_num) = imread(const.path2pics{pic_num});
+end
+const.freeview_pic_size = const.window_size;
+const.freeview_pic_rect_orig = [0, 0, ...
+                                size(const.free_view_pic,1),...
+                                size(const.free_view_pic,2)];
+const.freeview_pic_rect_disp = [ scr.x_mid - const.freeview_pic_size/2, ...
+                                 scr.y_mid - const.freeview_pic_size/2, ...
+                                 scr.x_mid + const.freeview_pic_size/2, ...
+                                 scr.y_mid + const.freeview_pic_size/2];
 
 % Trial settings
-const.nb_repeat_fixation = 1;
+const.nb_repeat_fixation = 2;
 const.nb_trials_fixation = const.fixation_rows * const.fixation_cols ...
     * const.nb_repeat_fixation;
+const.TRs_fixation = const.nb_trials_fixation * const.fixtask_dur_TR;
 
 const.nb_repeat_pursuit = 1;
 const.nb_trials_pursuit = length(const.pursuit_ampVal) * ...
     length(const.pursuit_angles) * const.nb_repeat_pursuit;
+const.TRs_pursuit = const.nb_trials_pursuit * const.pursuit_dur_TR;
 
 const.nb_repeat_freeview = 1;
 const.nb_trials_freeview = const.freeview_pics;
+const.TRs_freeview = const.nb_trials_freeview * const.freeview_dur_TR;
 
-const.nb_trials_iti = 3;
+const.nb_trials_iti = 4; % 3 iti and final one
+const.TRs_iti = const.nb_trials_iti * const.iti_dur_TR;
 
 const.nb_trials = const.nb_trials_fixation + const.nb_trials_pursuit + ...
     const.nb_trials_freeview + const.nb_trials_iti;
 
 % define total TR numbers and scan duration
 if const.scanner
-    const.TRs_total = const.nb_trials*const.TRs;
+    const.TRs_total = const.TRs_fixation + const.TRs_pursuit + ...
+                            const.TRs_freeview + const.TRs_iti;
     fprintf(1,'\n\tScanner parameters: %1.0f TRs of %1.2f seconds for a total of %s\n',...
         const.TRs_total, const.TR_sec, ...
         datestr(seconds((const.TRs_total*const.TR_sec...

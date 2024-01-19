@@ -18,7 +18,7 @@ function expDes = runTrials(scr, const, expDes, my_key)
 % Function created by Martin SZINTE (martin.szinte@gmail.com)
 % ----------------------------------------------------------------------
 
-first_pursuit_trial = 1;
+trial_pursuit = 0;
 for t = 1:const.nb_trials
 
     % Open video
@@ -35,7 +35,7 @@ for t = 1:const.nb_trials
 
     % Check trial
     if const.checkTrial && const.expStart == 0
-        fprintf(1,'\n\n\t============= TRIAL %3.0f ==============\n',t);
+        fprintf(1,'\n\n\t=================== TRIAL %3.0f ====================\n',t);
         fprintf(1,'\n\tTask =             \t%s', const.task_txt{task});
         if ~isnan(var1); fprintf(1,'\n\tFixation location =\t%s', ...
                 const.fixations_postions_txt{var1}); end
@@ -58,10 +58,12 @@ for t = 1:const.nb_trials
             fix_offset_nbf = const.fixtask_dur_frm;
             trial_offset = fix_offset_nbf;
         case 3
+            trial_pursuit = trial_pursuit + 1;
             pursuit_onset_nbf = 1;
             pursuit_offset_nbf = const.pursuit_dur_frm;
             trial_offset = pursuit_offset_nbf;
         case 4
+            
             freeview_onset_nbf = 1;
             freeview_offset_nbf = const.freeview_dur_frm;
             trial_offset = freeview_offset_nbf;
@@ -84,14 +86,18 @@ for t = 1:const.nb_trials
         pursuit_amp = const.pursuit_amp(var2);
         pursuit_angle = const.pursuit_angles(var3);
         
-        if first_pursuit_trial
-            first_pursuit_trial = 0;
+        if trial_pursuit == 1
             pursuit_coord_on = [scr.x_mid, scr.y_mid];
+            pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
+                                                    pursuit_amp * -sind(pursuit_angle)];
+        elseif trial_pursuit == const.nb_trials_pursuit
+            pursuit_coord_on = pursuit_coord_off;
+            pursuit_coord_off = [scr.x_mid, scr.y_mid];
         else
             pursuit_coord_on = pursuit_coord_off;
+            pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
+                                                    pursuit_amp * -sind(pursuit_angle)];
         end
-        pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
-                                                pursuit_amp * sind(pursuit_angle)];
 
         purs_x = linspace(pursuit_coord_on(1), pursuit_coord_off(1), const.pursuit_dur_frm);
         purs_y = linspace(pursuit_coord_on(2), pursuit_coord_off(2), const.pursuit_dur_frm);
@@ -99,7 +105,7 @@ for t = 1:const.nb_trials
     
     % Get freeview image
     if task == 4
-        % get the right image
+        pic_tex = Screen('MakeTexture', scr.main, const.free_view_pic(:,:,:,var4));
     end
 
     % Wait first MRI trigger
@@ -187,11 +193,85 @@ for t = 1:const.nb_trials
         % Freeview task
         if task == 4
             if nbf >= freeview_onset_nbf && nbf <= freeview_offset_nbf
-                % draw image
+                Screen('DrawTexture', scr.main, pic_tex, ...
+                    const.freeview_pic_rect_orig, ...
+                    const.freeview_pic_rect_disp);
+            end
+            if nbf == freeview_offset_nbf
+                Screen('Close', pic_tex);
+            end            
+        end
+        
+        % Check keyboard
+        keyPressed = 0;
+        keyCode = zeros(1,my_key.keyCodeNum);
+        for keyb = 1:size(my_key.keyboard_idx,2)
+            [keyP, keyC] = KbQueueCheck(my_key.keyboard_idx(keyb));
+            keyPressed = keyPressed + keyP;
+            keyCode = keyCode + keyC;
+        end
+        if keyPressed
+            if keyCode(my_key.escape) && const.expStart == 0
+                overDone(const, my_key)
             end
         end
         
+        % Create movie
+        if const.mkVideo
+            expDes.vid_num = expDes.vid_num + 1;
+            image_vid = Screen('GetImage', scr.main);
+            imwrite(image_vid,sprintf('%s_frame_%i.png', ...
+                const.movie_image_file, expDes.vid_num))
+            writeVideo(const.vid_obj,image_vid);
+        end
+        
+        % flip screen
         vbl = Screen('Flip', scr.main);
+        
+        % Save trials times
+        if task == 1
+            if nbf == iti_onset_nbf
+                trial_on = vbl;
+                log_txt = sprintf('iti %i onset at %f', t, vbl);
+                if const.tracker; Eyelink('message','%s',log_txt); end
+            elseif nbf == iti_offset_nbf
+                log_txt = sprintf('iti %i offset at %f', t, vbl);
+                if const.tracker; Eyelink('message','%s',log_txt); end
+            end
+        elseif task == 2
+            if nbf == fix_onset_nbf
+                trial_on = vbl;
+                log_txt = sprintf('fixation %i onset at %f', t, vbl);
+                if const.tracker; Eyelink('message','%s',log_txt); end
+            elseif nbf == fix_offset_nbf
+                log_txt = sprintf('fixation %i offset at %f', t, vbl);
+                if const.tracker; Eyelink('message','%s',log_txt); end
+            end
+        elseif task == 3
+            if nbf == pursuit_onset_nbf
+                trial_on = vbl;
+                log_txt = sprintf('pursuit %i onset at %f', t, vbl);
+                if const.tracker; Eyelink('message','%s',log_txt); end
+            elseif nbf == pursuit_offset_nbf
+                log_txt = sprintf('pursuit %i offset at %f', t, vbl);
+                if const.tracker; Eyelink('message','%s',log_txt); end
+            end
+        elseif task == 4
+            if nbf == freeview_onset_nbf
+                trial_on = vbl;
+                log_txt = sprintf('freeview %i onset at %f', t, vbl);
+                if const.tracker; Eyelink('message','%s',log_txt); end
+            elseif nbf == freeview_offset_nbf
+                log_txt = sprintf('freeview %i offset at %f', t, vbl);
+                if const.tracker; Eyelink('message','%s',log_txt); end
+            end
+        end
     end
-    
+    expDes.expMat(t, 1) = trial_on;
+    expDes.expMat(t, 2) = vbl - trial_on;
+end
+
+% Write in log/edf
+if const.tracker
+    Eyelink('message', '%s', sprintf('trial %i ended\n', t));
 end

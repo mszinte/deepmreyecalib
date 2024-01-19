@@ -3,14 +3,18 @@
 % By: Sina KLING
 % Projet: DeepMReyeClosed
 
-% Experimental design :
+% Experimental design : ~3min
 % Task 1: calibration fixation 
 % Task 1: calibration pursuit
 % Task 1: calibration freeview images
 
 % TODO (Sina)
-% -----------
-% write total TR numbers
+% ----------- 
+% do video
+% check in testing room
+% see with eye tracker 
+% analyse data of eye tracker
+% test in scanner
 
 % First settings
 Screen('CloseAll'); clear all; clear mex; clear functions; close all; ...
@@ -20,7 +24,7 @@ Screen('CloseAll'); clear all; clear mex; clear functions; close all; ...
 const.expName = 'DeepMReyeCalib';       % experiment name
 const.expStart = 0;                     % Start of a recording (0 = NO, 1 = YES)
 const.checkTrial = 1;                   % Print trial conditions (0 = NO, 1 = YES)
-const.mkVideo = 0;                      % Make a video (0 = NO, 1 = YES)
+const.mkVideo = 1;                      % Make a video (0 = NO, 1 = YES)
 
 % External controls
 const.tracker = 0;                      % run with eye tracker (0 = NO, 1 = YES)
@@ -30,7 +34,7 @@ const.scannerTest = 1;                  % fake scanner trigger (0 = NO, 1 = YES)
 const.training = 0;                     % training session (0 = NO, 1 = YES)
 
 % Desired screen setting
-const.desiredFD = 120;                  % Desired refresh rate
+const.desiredFD = 60;                  % Desired refresh rate
 const.desiredRes = [1920, 1080];        % Desired resolution
 
 % Path
