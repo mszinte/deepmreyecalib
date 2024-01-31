@@ -111,7 +111,7 @@ for t = 1:const.nb_trials
     % Wait first MRI trigger
     if t == 1
         Screen('FillRect',scr.main,const.background_color);
-        drawBullsEye(scr, const, scr.x_mid, scr.y_mid);
+        drawBullsEye(scr, const, scr.x_mid, scr.y_mid, 0);
         Screen('Flip',scr.main);
     
         first_trigger = 0;
@@ -172,21 +172,21 @@ for t = 1:const.nb_trials
         % Inter-trial interval
         if task == 1
             if nbf >= iti_onset_nbf && nbf <= iti_offset_nbf 
-                drawBullsEye(scr, const, iti_x, iti_y);
+                drawBullsEye(scr, const, iti_x, iti_y, 1);
             end
         end
         
         % Fixation task
         if task == 2
             if nbf >= fix_onset_nbf && nbf <= fix_offset_nbf
-                drawBullsEye(scr, const, fix_x, fix_y);
+                drawBullsEye(scr, const, fix_x, fix_y, 1);
             end
         end
         
         % Pursuit task
         if task == 3
             if nbf >= pursuit_onset_nbf && nbf <= pursuit_offset_nbf
-                drawBullsEye(scr, const, purs_x(nbf), purs_y(nbf));
+                drawBullsEye(scr, const, purs_x(nbf), purs_y(nbf), 1);
             end
         end
         
