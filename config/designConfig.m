@@ -71,7 +71,7 @@ while trial_repeat
     trialMat_fixation = trialMat_fixation(randperm(const.nb_trials_fixation),:);
     trial_repeat = sum(diff(trialMat_fixation(:,2))==0);
 end
-trialMat_fixation = [1, nan, nan, nan, nan; % add intertrial interval
+trialMat_fixation = [1, 13, nan, nan, nan; % add intertrial interval
                      trialMat_fixation];    
 
 % Pursuit experimental loop
@@ -124,7 +124,7 @@ for trial_pursuit = 1:const.nb_trials_pursuit
     pursuit_coords_on = [pursuit_coords_on; pursuit_coord_on];
     pursuit_coords_off = [pursuit_coords_off; pursuit_coord_off];
 end
-trialMat_pursuit = [1, nan, nan, nan, nan; % add intertrial interval
+trialMat_pursuit = [1, 13, nan, nan, nan; % add intertrial interval
                     trialMat_pursuit];
 
 
@@ -139,7 +139,7 @@ for rep = 1:const.nb_repeat_freeview
     end
 end
 trialMat_freeview = trialMat_freeview(randperm(const.nb_trials_freeview),:);
-trialMat_freeview = [1, nan, nan, nan, nan; ... % add intertrial interval
+trialMat_freeview = [1, 13, nan, nan, nan; ... % add intertrial interval
                      trialMat_freeview; ...
                      1, nan, nan, nan, nan; % add end interval
                      ];    
