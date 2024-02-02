@@ -216,6 +216,9 @@ for t = 1:const.nb_trials
             end
         end
         
+        % flip screen
+        vbl = Screen('Flip', scr.main);
+        
         % Create movie
         if const.mkVideo
             expDes.vid_num = expDes.vid_num + 1;
@@ -224,9 +227,6 @@ for t = 1:const.nb_trials
                 const.movie_image_file, expDes.vid_num))
             writeVideo(const.vid_obj,image_vid);
         end
-        
-        % flip screen
-        vbl = Screen('Flip', scr.main);
         
         % Save trials times
         if task == 1
