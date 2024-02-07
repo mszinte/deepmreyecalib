@@ -269,9 +269,14 @@ for t = 1:const.nb_trials
     end
     expDes.expMat(t, 1) = trial_on;
     expDes.expMat(t, 2) = vbl - trial_on;
+
+    % Write in log/edf
+    if const.tracker
+        Eyelink('message', '%s', sprintf('trial %i ended\n', t));
+    end
+
+
 end
 
-% Write in log/edf
-if const.tracker
-    Eyelink('message', '%s', sprintf('trial %i ended\n', t));
 end
+
