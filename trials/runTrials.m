@@ -101,6 +101,7 @@ for t = 1:const.nb_trials
 
         purs_x = linspace(pursuit_coord_on(1), pursuit_coord_off(1), const.pursuit_dur_frm);
         purs_y = linspace(pursuit_coord_on(2), pursuit_coord_off(2), const.pursuit_dur_frm);
+
     end
     
     % Get freeview image

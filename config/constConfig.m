@@ -21,8 +21,9 @@ function const = constConfig(scr, const)
 % Colors
 const.white = [255, 255, 255];
 const.gray = [128 128 128];
+const.black = [0,0,0];
 const.fixation_color = const.white;
-const.background_color = const.gray; 
+const.background_color = const.black; 
 
 % Time parameters
 const.TR_sec = 1.2;                                                         % MRI time repetition in seconds
@@ -48,7 +49,7 @@ const.freeview_dur_frm = round(const.freeview_dur_sec / scr.frame_duration);% Pi
 % Stim parameters
 [const.ppd] = vaDeg2pix(1, scr);                                            % one pixel per dva
 const.dpp = 1/const.ppd;                                                    % degrees per pixel
-const.window_sizeVal = 14;                                                  % side of the display window
+const.window_sizeVal = 18;                                                  % side of the display window
 
 % tasks
 const.task_txt = {'inter-trial interval', 'fixation', 'pursuit', 'freeviewing'};
