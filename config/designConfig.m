@@ -141,7 +141,7 @@ end
 trialMat_freeview = trialMat_freeview(randperm(const.nb_trials_freeview),:);
 trialMat_freeview = [1, 13, nan, nan, nan; ... % add intertrial interval
                      trialMat_freeview; ...
-                     1, nan, nan, nan, nan; % add end interval
+                     1, 13, nan, nan, nan; % add end interval
                      ];    
 
 % Define main matrix
