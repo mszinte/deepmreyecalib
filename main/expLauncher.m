@@ -1,4 +1,4 @@
-
+ 
 %% General experimenter launcher
 %  =============================
 % By: Sina KLING
@@ -6,8 +6,8 @@
 
 % Experimental design : ~3min
 % Task 1: calibration fixation 
-% Task 1: calibration pursuit
-% Task 1: calibration freeview images
+% Task 2: calibration pursuit
+% Task 3: calibration freeview images
 
 % TODO (Sina)
 % ----------- 
