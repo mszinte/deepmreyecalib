@@ -2,7 +2,7 @@
 %% General experimenter launcher
 %  =============================
 % By: Sina KLING
-% Projet: DeepMReyeClosed
+% Projet: DeepMReyeCalib
 
 % Experimental design : ~3min
 % Task 1: calibration fixation 
