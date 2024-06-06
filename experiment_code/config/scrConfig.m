@@ -47,6 +47,13 @@ elseif const.comp == 2
     scr.dist = 120;
     scr.distTop = 1210;
     scr.distBot = 1210;
+elseif const.comp == 3
+    % Settings for 7T room Spinoza 
+    scr.disp_sizeX = 689;
+    scr.disp_sizeY = 399;
+    scr.dist = 210;
+    scr.distTop = 2100;
+    scr.distBot = 2100;
 end
 scr.disp_sizeLeft = round(-scr.disp_sizeX/2);
 scr.disp_sizeRight = round(scr.disp_sizeX/2);
