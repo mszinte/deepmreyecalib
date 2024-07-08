@@ -26,7 +26,7 @@ const.fixation_color = const.white;
 const.background_color = const.black; 
 
 % Time parameters
-const.TR_sec = 1.2;                                                         % MRI time repetition in seconds
+const.TR_sec = 1.6;                                                         % MRI time repetition in seconds
 const.TR_frm = round(const.TR_sec/scr.frame_duration);                      % MRI time repetition in seconds in screen frames
 
 %new stimulus time parameters
@@ -48,9 +48,14 @@ const.freeview_dur_frm = round(const.freeview_dur_sec / scr.frame_duration);% Pi
 
 % Stim parameters
 [const.ppd] = vaDeg2pix(1, scr);                                            % one pixel per dva
-const.dpp = 1/const.ppd;                                                    % degrees per pixel
-const.window_sizeVal = 20;                                                  % size of the display window
-
+const.dpp = 1/const.ppd;   % degrees per pixel
+if const.comp == 3
+    const.window_sizeVal = 10;                                              % size of the display window
+elseif const.comp == 4
+    const.window_sizeVal = 60;                                              % size of the display window
+else
+    const.window_sizeVal = 18;                                              % size of the display window
+end 
 % tasks
 const.task_txt = {'inter-trial interval', 'fixation', 'pursuit', 'freeviewing'};
 
