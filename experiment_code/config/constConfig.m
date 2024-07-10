@@ -88,7 +88,14 @@ for fix_cols = 1:const.fixation_cols
 end
 
 % pursuit task
-const.pursuit_ampVal = [3, 5, 7];
+if const.comp == 3
+    const.pursuit_ampVal = [2, 3, 4];
+elseif const.comp == 4
+    const.pursuit_ampVal = [10,12,14];
+else 
+    const.pursuit_ampVal = [3, 5, 7];
+end
+    
 
 const.pursuit_amp = vaDeg2pix(const.pursuit_ampVal, scr);
 const.pursuit_amps = length(const.pursuit_ampVal);
