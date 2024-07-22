@@ -111,16 +111,17 @@ for t = 1:const.nb_trials
 
     % Wait first MRI trigger
     if t == 1
+        time_start = GetSecs;
         Screen('FillRect',scr.main,const.background_color);
         drawBullsEye(scr, const, scr.x_mid, scr.y_mid, 0);
         Screen('Flip',scr.main);
-    
+        tellapsed               =   GetSecs - time_start;
         first_trigger = 0;
-        expDes.mri_band_val = my_key.first_val(end);
+    
         while ~first_trigger
             if const.scanner == 0 || const.scannerTest
+                WaitSecs(const.TR_sec-tellapsed);
                 first_trigger = 1;
-                mri_band_val = -8;
             else
                 keyPressed = 0;
                 keyCode = zeros(1,my_key.keyCodeNum);
@@ -129,32 +130,15 @@ for t = 1:const.nb_trials
                     keyPressed = keyPressed + keyP;
                     keyCode = keyCode + keyC;
                 end
-                if const.scanner == 1
-                    input_return = [my_key.ni_session2.inputSingleScan,...
-                        my_key.ni_session1.inputSingleScan];
-                    if input_return(my_key.idx_mri_bands) == ...
-                            ~expDes.mri_band_val
-                        keyPressed = 1;
-                        keyCode(my_key.mri_tr) = 1;
-                        expDes.mri_band_val = ~expDes.mri_band_val;
-                        mri_band_val = input_return(my_key.idx_mri_bands);
-                    end
-                end
                 if keyPressed
                     if keyCode(my_key.escape) && const.expStart == 0
                         overDone(const, my_key)
                     elseif keyCode(my_key.mri_tr)
                         first_trigger = 1;
-                        mri_band_val = -8;
                     end
                 end
             end
         end
-        
-       % Write in edf file
-        log_txt = sprintf('trial %i mri_trigger val = %i', t, ...
-            mri_band_val);
-        if const.tracker; Eyelink('message', '%s', log_txt); end
     end
     
     
@@ -281,4 +265,3 @@ for t = 1:const.nb_trials
 end
 
 end
-

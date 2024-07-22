@@ -23,7 +23,7 @@ const = dirSaveFile(const);
 scr = scrConfig(const);
 
 % Triggers and button configurations
-my_key = keyConfig(const);
+my_key = keyConfig;
 
 % Experimental constant
 const = constConfig(scr, const);
@@ -32,6 +32,7 @@ const = constConfig(scr, const);
 expDes = designConfig(scr, const);
 
 % Open screen windows
+Screen('Preference', 'SkipSyncTests', 1);
 [scr.main, scr.rect] = Screen('OpenWindow', scr.scr_num, ...
     const.background_color, [], scr.clr_depth, 2);
 [~] = Screen('BlendFunction', scr.main, GL_SRC_ALPHA, ...

@@ -96,6 +96,7 @@ end
 if ~const.expStart
     Screen('Preference','VisualDebugLevel', 0);
     Screen('Preference','SyncTestSettings', 0.01, 50, 0.25);
+    Screen('Preference', 'SkipSyncTests', 1);
 else
     Screen('Preference','VisualDebugLevel', 0);
     Screen('Preference','SyncTestSettings', 0.01, 50, 0.25);

@@ -50,7 +50,7 @@ const.freeview_dur_frm = round(const.freeview_dur_sec / scr.frame_duration);% Pi
 [const.ppd] = vaDeg2pix(1, scr);                                            % one pixel per dva
 const.dpp = 1/const.ppd;   % degrees per pixel
 if const.comp == 3
-    const.window_sizeVal = 10;                                              % size of the display window
+    const.window_sizeVal = 9;                                              % size of the display window
 elseif const.comp == 4
     const.window_sizeVal = 60;                                              % size of the display window
 else
@@ -89,7 +89,7 @@ end
 
 % pursuit task
 if const.comp == 3
-    const.pursuit_ampVal = [2, 3, 4];
+    const.pursuit_ampVal = [4, 5, 6];
 elseif const.comp == 4
     const.pursuit_ampVal = [10,12,14];
 else 

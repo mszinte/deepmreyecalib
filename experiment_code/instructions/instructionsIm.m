@@ -51,16 +51,6 @@ while ~push_button
         keyCode = keyCode + keyC;
     end
     
-    if const.scanner == 1 && ~const.scannerTest
-        input_return = [my_key.ni_session2.inputSingleScan, ...
-            my_key.ni_session1.inputSingleScan];
-        if input_return(my_key.idx_button_right1)...
-                == my_key.button_press_val
-            keyPressed = 1;
-            keyCode(my_key.right1) = 1;
-        end
-    end
-    
     if keyPressed
         if keyCode(my_key.space) || keyCode(my_key.right1)
             push_button = 1;
