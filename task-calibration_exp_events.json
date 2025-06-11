@@ -1,0 +1,90 @@
+{
+  "onset": {
+    "LongName": "Onset time",
+    "Description": "Time at which event occured, relative to start of scan, in sec"},
+
+  "duration": {
+    "LongName": "Duration",
+    "Description": "Duration of the event in sec"},
+
+  "run_number": {
+    "LongName": "Number of the run",
+    "Description": "Indicated the number of the run"},
+
+  "trial_number": {
+    "LongName": "Number of the trial",
+    "Description": "Indicated the number of the trial"},
+
+  "trial_type": {
+    "LongName": "task condition",
+    "Description": "Indicated the condition of the task",
+    "Levels": {
+      "1": "intertrial interval",
+      "2": "fixation",
+      "3": "pursuit",
+      "4": "freeviewing"}},
+
+  "fixation_location": {
+    "LongName": "Location of the fixation point",
+    "Description": "Coordinate of location on 7 by 3 grid of 12.375 x 22 dva",
+    "Levels": {
+      "1": " [-11.0; +6.1875]",
+      "2": " [-7.33; +6.1875]",
+      "3": " [-3.67; +6.1875]",
+      "4": " [0;     +6.1875]",
+      "5": " [+3.67; +6.1875]",
+      "6": " [+7.33; +6.1875]",
+      "7": " [+11.0; +6.1875]",
+      "8": " [-11.0; 0]",
+      "9": " [-7.33; 0]",
+      "10": "[-3.67; 0]", 
+      "11": "[0; 0]",
+      "12": "[+3.67; 0]",
+      "13": "[+7.33; 0]",
+      "14": "[+11.0; 0]",
+      "15": "[-11.0; -6.1875]",
+      "16": "[-7.33; -6.1875]",
+      "17": "[-3.67; -6.1875]",
+      "18": "[0; -6.1875]",
+      "19": "[+3.67; -6.1875]",
+      "20": "[+7.33; -6.1875]",
+      "21": "[+11.0; -6.1875]"
+    }}, 
+
+  "pursuit_amplitude": {
+    "LongName": "Amplitude fixation point",
+    "Description": "Amount of dva travelled by fixation point during one trial",
+    "Levels": {
+      "1": "3",
+      "2": "5",
+      "3": "6"}}, 
+
+
+   "pursuit_angle": {
+    "LongName": "Angle for pursuit movement",
+    "Description": "Precalculated degrees within accepted window of 12.375 x 22 dva",
+    "Levels": {
+      "1": "0", 
+      "2": "20", 
+      "3": "40", 
+      "4": "60", 
+      "5": "80", 
+      "6": "100", 
+      "7": "120", 
+      "8": "140", 
+      "9": "160", 
+      "10": "180", 
+      "11": "200", 
+      "12": "220", 
+      "13": "240", 
+      "14": "260", 
+      "15": "280", 
+      "16": "300", 
+      "17": "320", 
+      "18": "340"}}, 
+
+  "image_id": {
+    "LongName": "Number of image",
+    "Description": "Indicated image shown in freeviewing task"}
+    
+}

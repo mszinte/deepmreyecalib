@@ -25,11 +25,10 @@ function expDes = designConfig(scr, const)
 % Var 1: fixation location
 expDes.oneV = [1:1:const.fixations_postions]';
 expDes.nb_var1 = length(expDes.oneV);
-% 01 02 03 04 05
-% 06 07 08 09 10
-% 11 12 13 14 15
-% 16 17 18 19 20
-% 21 22 23 24 25
+% 01 02 03 04 05 06 07
+% 08 09 10 11 12 13 14 
+% 15 16 17 18 19 20 21
+
 
 % Var 2: pursuit amplitude
 expDes.twoV = [1:1:const.pursuit_amps]';
@@ -89,30 +88,34 @@ for rep = 1:const.nb_repeat_pursuit
 end
 trialMat_pursuit = trialMat_pursuit(randperm(const.nb_trials_pursuit),:);
 
-% Compute angle (var3)
+% Compute angle (var3) - updated for rectangular window
 pursuit_coords_on = [];
 pursuit_coords_off = [];
 for trial_pursuit = 1:const.nb_trials_pursuit
     pursuit_amp = const.pursuit_amp(trialMat_pursuit(trial_pursuit,3));
     pursuit_angle = const.pursuit_angles(trialMat_pursuit(trial_pursuit,4));
     recompute = 1;
+    
     while recompute == 1
         if trial_pursuit == 1
             pursuit_coord_on = [scr.x_mid, scr.y_mid];
             pursuit_coord_off = [scr.x_mid + pursuit_amp * cosd(pursuit_angle),...
-                                 scr.y_mid + pursuit_amp * -sind(pursuit_angle)];
+                                scr.y_mid + pursuit_amp * -sind(pursuit_angle)];
         elseif trial_pursuit == const.nb_trials_pursuit
             pursuit_coord_on = pursuit_coords_off(trial_pursuit-1, :);
             pursuit_coord_off = [scr.x_mid, scr.y_mid];
         else
             pursuit_coord_on = pursuit_coords_off(trial_pursuit-1, :);
             pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
-                                                    pursuit_amp * -sind(pursuit_angle)];
+                                                   pursuit_amp * -sind(pursuit_angle)];
         end
         
-        % if fixation point leaves calibration window select another angle
-        if pursuit_coord_off(1) < scr.x_mid - const.window_size/2 || pursuit_coord_off(1) > scr.x_mid + const.window_size/2 || ...
-                pursuit_coord_off(2) < scr.y_mid - const.window_size/2 || pursuit_coord_off(2) > scr.y_mid + const.window_size/2
+        % Updated boundary check for rectangular window (22 x 12.375 DVA)
+        % Check if fixation point leaves the rectangular calibration window
+        if pursuit_coord_off(1) < scr.x_mid - const.window_size_x/2 || ...
+           pursuit_coord_off(1) > scr.x_mid + const.window_size_x/2 || ...
+           pursuit_coord_off(2) < scr.y_mid - const.window_size_y/2 || ...
+           pursuit_coord_off(2) > scr.y_mid + const.window_size_y/2
             recompute = 1;
             rand_val = randperm(length(const.pursuit_angles));
             trialMat_pursuit(trial_pursuit, 4) = rand_val(1);
@@ -121,11 +124,13 @@ for trial_pursuit = 1:const.nb_trials_pursuit
             recompute = 0;
         end
     end
+    
     pursuit_coords_on = [pursuit_coords_on; pursuit_coord_on];
     pursuit_coords_off = [pursuit_coords_off; pursuit_coord_off];
 end
+
 trialMat_pursuit = [1, 13, nan, nan, nan; % add intertrial interval
-                    trialMat_pursuit];
+                   trialMat_pursuit];
 
 
 % Freeview experimental loop

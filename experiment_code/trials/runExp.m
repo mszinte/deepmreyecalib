@@ -163,7 +163,7 @@ for trial = 1:const.nb_trials
 end
 
 % End messages
-instructionsIm(scr,const,my_key,'End',1); 
+instructionsIm(scr,const,my_key,'End_block',1); 
 
 % Save all config at the end of the block (overwrite start made at start)
 config.scr = scr; 

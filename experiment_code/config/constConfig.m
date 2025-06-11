@@ -26,7 +26,7 @@ const.fixation_color = const.white;
 const.background_color = const.black; 
 
 % Time parameters
-const.TR_sec = 1.2;                                                         % MRI time repetition in seconds
+const.TR_sec = 1.2; %TO BE ADAPTED                                                         % MRI time repetition in seconds
 const.TR_frm = round(const.TR_sec/scr.frame_duration);                      % MRI time repetition in seconds in screen frames
 
 %new stimulus time parameters
@@ -47,65 +47,78 @@ const.freeview_dur_sec = const.freeview_dur_TR * const.TR_sec;              % Pi
 const.freeview_dur_frm = round(const.freeview_dur_sec / scr.frame_duration);% Picture free viewing task stimulus duration in screen frames
 
 % Stim parameters
-[const.ppd] = vaDeg2pix(1, scr);                                            % one pixel per dva
-const.dpp = 1/const.ppd;                                                    % degrees per pixel
-const.window_sizeVal = 18;                                                  % side of the display window
+[const.ppd] = vaDeg2pix(1, scr); % one pixel per dva
+const.dpp = 1/const.ppd; % degrees per pixel
+
+% New display window dimensions
+const.window_sizeVal_x = 22; % horizontal size in dva
+const.window_sizeVal_y = 12.375; % vertical size in dva
 
 % tasks
 const.task_txt = {'inter-trial interval', 'fixation', 'pursuit', 'freeviewing'};
 
-% fixation task
-const.fixation_rows = 5;
-const.fixation_cols = 5;
-const.fixations_postions = const.fixation_rows * const.fixation_cols;
-const.window_size = vaDeg2pix(const.window_sizeVal, scr);
-const.fixations_postions_txt = {'[-7.0; +7.0]', '[-3.5; +7.0]', '[   0; +7.0]', '[+3.5; +7.0]', '[+7.0; +7.0]', ...
-                                '[-7.0; +3.5]', '[-3.5; +3.5]', '[   0; +3.5]', '[+3.5; +3.5]', '[+7.0; +3.5]', ...
-                                '[-7.0;    0]', '[-3.5;    0]', '[   0;    0]', '[+3.5;    0]', '[+7.0;    0]', ...
-                                '[-7.0; -3.5]', '[-3.5; -3.5]', '[   0; -3.5]', '[+3.5; -3.5]', '[+7.0; -3.5]', ...
-                                '[-7.0; -7.0]', '[-3.5; -7.0]', '[   0; -7.0]', '[+3.5; -7.0]', '[+7.0; -7.0]'};
-const.fixation_coord_x = linspace(scr.x_mid - const.window_size/2, ...
-                                  scr.x_mid + const.window_size/2, ...
-                              const.fixation_cols);
-                              
-const.fixation_coord_y = linspace(scr.y_mid - const.window_size/2, ...
-                                  scr.y_mid + const.window_size/2, ...
-                              const.fixation_cols);
-                          
+% fixation task - new 7x3 grid
+const.fixation_rows = 3;
+const.fixation_cols = 7;
+const.fixations_postions = const.fixation_rows * const.fixation_cols; % 21 positions
+
+% Convert window size to pixels
+const.window_size_x = vaDeg2pix(const.window_sizeVal_x, scr);
+const.window_size_y = vaDeg2pix(const.window_sizeVal_y, scr);
+
+% Updated position descriptions for 7x3 grid
+const.fixations_postions_txt = {
+    '[-11.0; +6.1875]', '[-7.33; +6.1875]', '[-3.67; +6.1875]', '[0; +6.1875]', '[+3.67; +6.1875]', '[+7.33; +6.1875]', '[+11.0; +6.1875]', ...
+    '[-11.0; 0]', '[-7.33; 0]', '[-3.67; 0]', '[0; 0]', '[+3.67; 0]', '[+7.33; 0]', '[+11.0; 0]', ...
+    '[-11.0; -6.1875]', '[-7.33; -6.1875]', '[-3.67; -6.1875]', '[0; -6.1875]', '[+3.67; -6.1875]', '[+7.33; -6.1875]', '[+11.0; -6.1875]'
+};
+
+% Calculate fixation coordinates in pixels
+const.fixation_coord_x = linspace(scr.x_mid - const.window_size_x/2, ...
+                                  scr.x_mid + const.window_size_x/2, ...
+                                  const.fixation_cols);
+const.fixation_coord_y = linspace(scr.y_mid - const.window_size_y/2, ...
+                                  scr.y_mid + const.window_size_y/2, ...
+                                  const.fixation_rows);
+
+% Generate all fixation coordinates
 const.fixation_coords = [];
-for fix_cols = 1:const.fixation_cols
-    for fix_rows = 1:const.fixation_rows
-        
-        const.fixation_coords = [const.fixation_coords;...
-                                 const.fixation_coord_x(fix_rows), ...
-                                 const.fixation_coord_y(fix_cols)];
+for fix_rows = 1:const.fixation_rows
+    for fix_cols = 1:const.fixation_cols
+        const.fixation_coords = [const.fixation_coords; ...
+                                const.fixation_coord_x(fix_cols), ...
+                                const.fixation_coord_y(fix_rows)];
     end
 end
 
 % pursuit task
-const.pursuit_ampVal = [3, 5, 7];
-
+% amplitudes adapted for rectangular window (22 x 12.375 DVA)
+const.pursuit_ampVal = [3, 5, 6];  % updated amplitudes to allow all angles
 const.pursuit_amp = vaDeg2pix(const.pursuit_ampVal, scr);
 const.pursuit_amps = length(const.pursuit_ampVal);
-const.pursuit_amps_txt = {'3.0 dva', '5.0 dva', '7.0 dva'};
+const.pursuit_amps_txt = {'3.0 dva', '5.0 dva', '6.0 dva'};
 
+% angles - all 18 original angles now work with new amplitudes
 const.pursuit_angles_steps = 20;
 const.pursuit_angles = [0:const.pursuit_angles_steps:359];
 const.pursuit_angles_txt = {'0 deg', '20 deg', '40 deg', '60 deg', ...
-                            '80 deg', '100 deg', '120 deg', '140 deg', ...
-                            '160 deg', '180 deg', '200 deg', '220 deg', ...
-                            '240 deg', '260 deg', '280 deg', '300 deg', ...
-                            '320 deg', '340 deg'};
+                           '80 deg', '100 deg', '120 deg', '140 deg', ...
+                           '160 deg', '180 deg', '200 deg', '220 deg', ...
+                           '240 deg', '260 deg', '280 deg', '300 deg', ...
+                           '320 deg', '340 deg'};
 
+% boundary constraints for rectangular window
+const.pursuit_boundary_x = const.window_sizeVal_x / 2;  % ±11 DVA horizontal
+const.pursuit_boundary_y = const.window_sizeVal_y / 2;  % ±6.1875 DVA vertical
 
 % freeview task
 const.freeview_pics = 10;
 if ismac; const.freeview_path2pics = './stim/images';
 else; const.freeview_path2pics = '.\stim\images';
 end
-const.freeview_pics_txt = {'water_drops', 'coffee', 'hands', 'astronaut', ...
-                           'flat_iron', 'road', 'landscape', 'black swan', ...
-                           'dog', 'balloon'};
+const.freeview_pics_txt = {'wood', 'coffee', 'hands', 'astronaut', ...
+                          'street', 'road', 'landscape', 'swan', ...
+                          'dog', 'balloon'};
 
 % get image paths
 path2pics = dir(fullfile(const.freeview_path2pics, 'image*'));
@@ -113,14 +126,20 @@ const.path2pics = fullfile(path2pics(1).folder, {path2pics(:).name}');
 for pic_num = 1:length(const.path2pics)
     const.free_view_pic(:,:,:,pic_num) = imread(const.path2pics{pic_num});
 end
-const.freeview_pic_size = const.window_size;
+
+% Updated for rectangular display (22 x 12.375 DVA)
+const.freeview_pic_size_x = const.window_size_x;  % horizontal size in pixels
+const.freeview_pic_size_y = const.window_size_y;  % vertical size in pixels
+
+% Updated rectangle definitions
 const.freeview_pic_rect_orig = [0, 0, ...
-                                size(const.free_view_pic,1),...
-                                size(const.free_view_pic,2)];
-const.freeview_pic_rect_disp = [ scr.x_mid - const.freeview_pic_size/2, ...
-                                 scr.y_mid - const.freeview_pic_size/2, ...
-                                 scr.x_mid + const.freeview_pic_size/2, ...
-                                 scr.y_mid + const.freeview_pic_size/2];
+                               size(const.free_view_pic,2), ...  % width 
+                               size(const.free_view_pic,1)];     % height 
+
+const.freeview_pic_rect_disp = [scr.x_mid - const.freeview_pic_size_x/2, ...  % left
+                               scr.y_mid - const.freeview_pic_size_y/2, ...   % top  
+                               scr.x_mid + const.freeview_pic_size_x/2, ...   % right
+                               scr.y_mid + const.freeview_pic_size_y/2];      % bottom
 
 % Trial settings
 const.nb_repeat_fixation = 2;

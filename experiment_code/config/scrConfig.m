@@ -28,25 +28,27 @@ if (scr.scr_sizeX ~= const.desiredRes(1) || scr.scr_sizeY ~= ...
 end
 
 % Overwrite if scanning
-if const.scanner == 1 && ~const.scannerTest
-    const.comp = 1;
-end
+%if const.scanner == 1 && ~const.scannerTest
+%    const.center = 1;
+%end
 
 % Size of the display
-if const.comp == 1
-    % Settings 3T MRI room projector
-    scr.disp_sizeX = 781.9;
-    scr.disp_sizeY = 440;
-    scr.dist = 123;
-    scr.distTop = 1230;
-    scr.distBot = 1230;
-elseif const.comp == 2
+if const.center == "INT"
     % Settings for Display ++ INT
     scr.disp_sizeX = 696;
     scr.disp_sizeY = 391;
     scr.dist = 120;
     scr.distTop = 1210;
     scr.distBot = 1210;
+elseif const.center == "CENIR"
+    % Settings for Display CENIR CENTER
+    scr.disp_sizeX = 696; %TO BE ADAPTED
+    scr.disp_sizeY = 391; %TO BE ADAPTED
+    scr.dist = 120;
+    scr.distTop = 1200;
+    scr.distBot = 12100;
+
+
 end
 scr.disp_sizeLeft = round(-scr.disp_sizeX/2);
 scr.disp_sizeRight = round(scr.disp_sizeX/2);
