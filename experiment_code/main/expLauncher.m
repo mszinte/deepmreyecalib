@@ -18,14 +18,17 @@ Screen('CloseAll'); clear all; clear mex; clear functions; close all; ...
 const.expName = 'calibration_exp';      % experiment name
 const.expStart = 0;                     % Start of a recording (0 = NO, 1 = YES)
 const.checkTrial = 0;                   % Print trial conditions (0 = NO, 1 = YES)
-const.mkVideo = 0;                      % Make a video (0 = NO, 1 = YES)
+const.mkVideo = 1;                      % Make a video (0 = NO, 1 = YES)
 
 % External controls
 const.tracker = 0;                      % run with eye tracker (0 = NO, 1 = YES)
-const.center = "INT";                   % run in which center
+const.center = "CENIR";                 % run in which center
 const.scanner = 0;                      % run in MRI scanner (0 = NO, 1 = YES)
 const.scannerTest = 0;                  % fake scanner trigger (0 = NO, 1 = YES)
 const.training = 0;                     % training session (0 = NO, 1 = YES)
+
+% Time 
+const.TR_sec = 1.3;                     % depending on center
 
 % Desired screen setting
 const.desiredFD = 120;                  % Desired refresh rate

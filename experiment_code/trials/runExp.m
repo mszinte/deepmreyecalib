@@ -20,7 +20,7 @@ function const = runExp(scr, const, expDes, my_key, eyetrack)
 
 % Configuration of videos
 if const.mkVideo
-    const.vid_folder = sprintf('others/movie/%s', const.task);
+    const.vid_folder = sprintf('others/movie/%s_%s_%s', const.task, const.center, const.TR_sec);
     if ~isfolder(const.vid_folder); mkdir(const.vid_folder); end
     const.movie_image_file = sprintf('%s/img', const.vid_folder);
     const.movie_file = sprintf('%s.mp4', const.vid_folder);

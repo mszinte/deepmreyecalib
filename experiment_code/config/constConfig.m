@@ -26,7 +26,7 @@ const.fixation_color = const.white;
 const.background_color = const.black; 
 
 % Time parameters
-const.TR_sec = 1.2; %TO BE ADAPTED                                                         % MRI time repetition in seconds
+const.TR_sec = 1.3; %TO BE ADAPTED                                                         % MRI time repetition in seconds
 const.TR_frm = round(const.TR_sec/scr.frame_duration);                      % MRI time repetition in seconds in screen frames
 
 %new stimulus time parameters
