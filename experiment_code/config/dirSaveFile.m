@@ -32,7 +32,19 @@ const.eyetrack_local_file = sprintf('%s_eyetrack.edf', ...
     const.dat_output_file);
 
 % Define behavioral data filename
-const.behav_file = sprintf('%s_events.tsv', const.dat_output_file);
+if const.mkVideo
+    % Create others/movie directory if it doesn't exist
+    if ~isfolder('others/movie')
+        mkdir('others/movie')
+    end
+    % Use custom filename format for video mode
+    const.behav_file = sprintf('others/movie/%s_%s_%s_events.tsv', ...
+        const.task, const.center, const.TR_sec);
+else
+    % Use original filename format
+    const.behav_file = sprintf('%s_events.tsv', const.dat_output_file);
+end
+
 if const.expStart
     if exist(const.behav_file,'file')
         aswErase = upper(strtrim(input(sprintf(...
