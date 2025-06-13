@@ -42,8 +42,8 @@ if const.center == "INT"
     scr.distBot = 1210;
 elseif const.center == "CENIR"
     % Settings for Display CENIR CENTER
-    scr.disp_sizeX = 696; %TO BE ADAPTED
-    scr.disp_sizeY = 391; %TO BE ADAPTED
+    scr.disp_sizeX = 560; 
+    scr.disp_sizeY = 310; 
     scr.dist = 120;
     scr.distTop = 1200;
     scr.distBot = 12100;

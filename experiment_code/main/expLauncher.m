@@ -28,7 +28,7 @@ const.scannerTest = 0;                  % fake scanner trigger (0 = NO, 1 = YES)
 const.training = 0;                     % training session (0 = NO, 1 = YES)
 
 % Time 
-const.TR_sec = 1.3;                     % depending on center
+const.TR_sec = 1.46;                     % depending on center: MRI time repetition in seconds
 
 % Desired screen setting
 const.desiredFD = 120;                  % Desired refresh rate
