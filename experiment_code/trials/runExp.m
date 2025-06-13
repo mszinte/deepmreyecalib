@@ -26,8 +26,8 @@ if const.mkVideo
     const.movie_file = sprintf('%s.mp4', const.vid_folder);
     expDes.vid_num = 0;
     const.vid_obj = VideoWriter(const.movie_file, 'MPEG-4');
-    const.vid_obj.FrameRate = round(1/const.TR_sec); % approximation! not temporally accurate
-	const.vid_obj.Quality = 100;
+    const.vid_obj.FrameRate = 1/const.TR_sec; % approximation! not temporally accurate
+    const.vid_obj.Quality = 100;
 end
 
 % Save all config at start of the block
