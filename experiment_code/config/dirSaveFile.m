@@ -39,7 +39,7 @@ if const.mkVideo
     end
     % Use custom filename format for video mode
     const.behav_file = sprintf('others/movie/%s_%s_%s_events.tsv', ...
-        const.task, const.center, const.TR_sec);
+        const.task, const.center, const.TR_sec_text);
 else
     % Use original filename format
     const.behav_file = sprintf('%s_events.tsv', const.dat_output_file);

@@ -29,6 +29,7 @@ const.training = 0;                     % training session (0 = NO, 1 = YES)
 
 % Time 
 const.TR_sec = 1.3;                     % depending on center: MRI time repetition in seconds
+const.TR_sec_text = "1_3";
 
 % Desired screen setting
 const.desiredFD = 120;                  % Desired refresh rate
