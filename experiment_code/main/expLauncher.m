@@ -20,23 +20,29 @@ Screen('CloseAll'); clear all; clear mex; clear functions; close all; ...
     home; AssertOpenGL;
 
 % General settings
-const.expName = 'DeepMReyeCalibAms';    % experiment name
-const.expStart = 1;                     % Start of a recording (0 = NO, 1 = YES)
-const.checkTrial = 0;                   % Print trial conditions (0 = NO, 1 = YES)
-const.mkVideo = 0;                      % Make a video (0 = NO, 1 = YES)
+const.expName = 'DeepMReyeCalib7t';     % experiment name
+const.expStart = 1;                     % Start of a recording          0 = NO, 1 = YES
+const.checkTrial = 0;                   % Print trial conditions        0 = NO, 1 = YES
+const.mkVideo = 0;                      % Make a video                  0 = NO, 1 = YES
+
+% Experiment settings 
+const.num_run = 2; 
 
 % External controls
-const.tracker = 0;                      % run with eye tracker (0 = NO, 1 = YES)
-const.comp = 3;                         % run in which computer (1 = MRI; 2 = Diplay++)
-const.scanner = 1;                      % run in MRI scanner (0 = NO, 1 = YES)
-const.scannerTest = 0;                  % fake scanner trigger (0 = NO, 1 = YES)
-const.training = 0;                     % training session (0 = NO, 1 = YES)
+const.tracker = 0;                      % run with eye tracker          0 = NO, 1 = YES
+const.comp = 1;                         % run in which computer         1 = MRI; 2 = Diplay++
+const.room = 1;                         % run in which room             1 = CRMBM, 2 = Eyetracking INT
+const.scanner = 0;                      % run in MRI scanner            0 = NO, 1 = YES
+const.scannerTest = 0;                  % fake scanner trigger          0 = NO, 1 = YES
+const.training = 0;                     % training session             0 = NO, 1 = YES
+        
+
 
 % Desired screen setting
 const.desiredFD = 120;                  % Desired refresh rate
 const.desiredRes = [1920, 1080];        % Desired resolution
 
-% Path
+% Path 
 dir = which('expLauncher');
 cd(dir(1:end-18));
   

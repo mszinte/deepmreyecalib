@@ -6,7 +6,7 @@ Version:  1.0<br/>
 
 ## Version description
 Eye movement tasks to gather training data for calibrating DeepMReye network
-and extend this method to eye close measures. Adaptation for 7T and large visual field experiment at Spinoza Centre Amsterdam.
+and extend this method to eye close measures. Adaptation for 7T and projector at CRMBM.
 
 ## Experiment runner
 * run the experiment using main/expLauncher.m

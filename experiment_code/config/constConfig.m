@@ -23,7 +23,16 @@ const.white = [255, 255, 255];
 const.gray = [128 128 128];
 const.black = [0,0,0];
 const.fixation_color = const.white;
-const.background_color = const.black; 
+const.background_color = const.gray; 
+
+% Projector display margins 
+const.disp_margin_top = cm2pix(scr.disp_margin_top, scr);                            % Display top margin not seen in scanner in pix
+const.disp_margin_bottom = cm2pix(scr.disp_margin_bottom, scr);                      % Display bottom margin not seen in scanner in pix
+const.disp_max = (scr.scr_sizeY - const.disp_margin_top - const.disp_margin_bottom); % Display size seen in scanner in pix
+
+% Updated screen center coordinates for projector
+const.rect_center = [scr.x_mid, ...
+                     const.disp_margin_top + const.disp_max/2];             % center of the rect in projector screen
 
 % Time parameters
 const.TR_sec = 1.6;                                                         % MRI time repetition in seconds
@@ -49,38 +58,37 @@ const.freeview_dur_frm = round(const.freeview_dur_sec / scr.frame_duration);% Pi
 % Stim parameters
 [const.ppd] = vaDeg2pix(1, scr);                                            % one pixel per dva
 const.dpp = 1/const.ppd;   % degrees per pixel
-if const.comp == 3
-    const.window_sizeVal = 9;                                              % size of the display window
-elseif const.comp == 4
-    const.window_sizeVal = 60;                                              % size of the display window
-else
-    const.window_sizeVal = 18;                                              % size of the display window
-end 
+
+const.window_sizeVal = 12;                                                  % size of the display window
+
 % tasks
 const.task_txt = {'inter-trial interval', 'fixation', 'pursuit', 'freeviewing'};
 
-% fixation task
+% fixation task - Updated to use projector center
 const.fixation_rows = 5;
 const.fixation_cols = 5;
 const.fixations_postions = const.fixation_rows * const.fixation_cols;
 const.window_size = vaDeg2pix(const.window_sizeVal, scr);
-const.fixations_postions_txt = {'[-7.0; +7.0]', '[-3.5; +7.0]', '[   0; +7.0]', '[+3.5; +7.0]', '[+7.0; +7.0]', ...
-                                '[-7.0; +3.5]', '[-3.5; +3.5]', '[   0; +3.5]', '[+3.5; +3.5]', '[+7.0; +3.5]', ...
-                                '[-7.0;    0]', '[-3.5;    0]', '[   0;    0]', '[+3.5;    0]', '[+7.0;    0]', ...
-                                '[-7.0; -3.5]', '[-3.5; -3.5]', '[   0; -3.5]', '[+3.5; -3.5]', '[+7.0; -3.5]', ...
-                                '[-7.0; -7.0]', '[-3.5; -7.0]', '[   0; -7.0]', '[+3.5; -7.0]', '[+7.0; -7.0]'};
-const.fixation_coord_x = linspace(scr.x_mid - const.window_size/2, ...
-                                  scr.x_mid + const.window_size/2, ...
+% Updated position descriptions to match 12-degree window (±6 degrees)
+% Grid positions are now: [-6.0, -3.0, 0.0, +3.0, +6.0] degrees
+const.fixations_postions_txt = {'[-6.0; +6.0]', '[-3.0; +6.0]', '[+0.0; +6.0]', '[+3.0; +6.0]', '[+6.0; +6.0]', ...
+                                '[-6.0; +3.0]', '[-3.0; +3.0]', '[+0.0; +3.0]', '[+3.0; +3.0]', '[+6.0; +3.0]', ...
+                                '[-6.0; +0.0]', '[-3.0; +0.0]', '[+0.0; +0.0]', '[+3.0; +0.0]', '[+6.0; +0.0]', ...
+                                '[-6.0; -3.0]', '[-3.0; -3.0]', '[+0.0; -3.0]', '[+3.0; -3.0]', '[+6.0; -3.0]', ...
+                                '[-6.0; -6.0]', '[-3.0; -6.0]', '[+0.0; -6.0]', '[+3.0; -6.0]', '[+6.0; -6.0]'};
+
+% The coordinate calculation 
+const.fixation_coord_x = linspace(const.rect_center(1) - const.window_size/2, ...
+                                  const.rect_center(1) + const.window_size/2, ...
                               const.fixation_cols);
                               
-const.fixation_coord_y = linspace(scr.y_mid - const.window_size/2, ...
-                                  scr.y_mid + const.window_size/2, ...
+const.fixation_coord_y = linspace(const.rect_center(2) - const.window_size/2, ...
+                                  const.rect_center(2) + const.window_size/2, ...
                               const.fixation_cols);
                           
 const.fixation_coords = [];
 for fix_cols = 1:const.fixation_cols
     for fix_rows = 1:const.fixation_rows
-        
         const.fixation_coords = [const.fixation_coords;...
                                  const.fixation_coord_x(fix_rows), ...
                                  const.fixation_coord_y(fix_cols)];
@@ -88,15 +96,9 @@ for fix_cols = 1:const.fixation_cols
 end
 
 % pursuit task
-if const.comp == 3
-    const.pursuit_ampVal = [4, 5, 6];
-elseif const.comp == 4
-    const.pursuit_ampVal = [10,12,14];
-else 
-    const.pursuit_ampVal = [3, 5, 7];
-end
-    
+const.pursuit_ampVal = [4, 5, 6];
 
+    
 const.pursuit_amp = vaDeg2pix(const.pursuit_ampVal, scr);
 const.pursuit_amps = length(const.pursuit_ampVal);
 const.pursuit_amps_txt = {'3.0 dva', '5.0 dva', '7.0 dva'};
@@ -109,8 +111,7 @@ const.pursuit_angles_txt = {'0 deg', '20 deg', '40 deg', '60 deg', ...
                             '240 deg', '260 deg', '280 deg', '300 deg', ...
                             '320 deg', '340 deg'};
 
-
-% freeview task
+% freeview task - Updated to use projector center
 const.freeview_pics = 10;
 if ismac; const.freeview_path2pics = './stim/images';
 else; const.freeview_path2pics = '.\stim\images';
@@ -129,10 +130,11 @@ const.freeview_pic_size = const.window_size;
 const.freeview_pic_rect_orig = [0, 0, ...
                                 size(const.free_view_pic,1),...
                                 size(const.free_view_pic,2)];
-const.freeview_pic_rect_disp = [ scr.x_mid - const.freeview_pic_size/2, ...
-                                 scr.y_mid - const.freeview_pic_size/2, ...
-                                 scr.x_mid + const.freeview_pic_size/2, ...
-                                 scr.y_mid + const.freeview_pic_size/2];
+% Use projector center for image positioning
+const.freeview_pic_rect_disp = [ const.rect_center(1) - const.freeview_pic_size/2, ...
+                                 const.rect_center(2) - const.freeview_pic_size/2, ...
+                                 const.rect_center(1) + const.freeview_pic_size/2, ...
+                                 const.rect_center(2) + const.freeview_pic_size/2];
 
 % Trial settings
 const.nb_repeat_fixation = 2;
@@ -173,15 +175,16 @@ const.fix_out_rim_rad = vaDeg2pix(const.fix_out_rim_radVal, scr);           % ra
 const.fix_rim_rad = vaDeg2pix(const.fix_rim_radVal, scr);                   % radius of intermediate circle of fixation bull's eye in pixels
 const.fix_rad = vaDeg2pix(const.fix_radVal, scr);                           % radius of inner circle of fixation bull's eye in pixels
 
-% Personalised eyelink calibrations
+% Personalised eyelink calibrations - Updated to use projector center
 angle = 0:pi/3:5/3*pi;
  
 % compute calibration target locations
 const.calib_amp_ratio = 0.5;
 [cx1, cy1] = pol2cart(angle, const.calib_amp_ratio);
 [cx2, cy2] = pol2cart(angle + (pi / 6), const.calib_amp_ratio * 0.5);
-cx = round(scr.x_mid + scr.x_mid * [0 cx1 cx2]);
-cy = round(scr.y_mid + scr.x_mid * [0 cy1 cy2]);
+% Use projector center for calibration coordinates
+cx = round(const.rect_center(1) + scr.x_mid * [0 cx1 cx2]);
+cy = round(const.rect_center(2) + scr.x_mid * [0 cy1 cy2]);
  
 % order for eyelink
 const.calibCoord = round([cx(1), cy(1),...                                  % 1. center center
@@ -202,8 +205,9 @@ const.calibCoord = round([cx(1), cy(1),...                                  % 1.
 const.valid_amp_ratio = const.calib_amp_ratio * 0.8;
 [vx1, vy1] = pol2cart(angle, const.valid_amp_ratio);
 [vx2, vy2] = pol2cart(angle + pi /6, const.valid_amp_ratio * 0.5);
-vx = round(scr.x_mid + scr.x_mid*[0 vx1 vx2]);
-vy = round(scr.y_mid + scr.x_mid*[0 vy1 vy2]);
+% Use projector center for validation coordinates
+vx = round(const.rect_center(1) + scr.x_mid*[0 vx1 vx2]);
+vy = round(const.rect_center(2) + scr.x_mid*[0 vy1 vy2]);
 
 % order for eyelink
 const.validCoord =round([vx(1), vy(1),...                                   % 1. center center

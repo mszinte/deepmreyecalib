@@ -19,7 +19,7 @@ scr.all = Screen('Screens');
 scr.scr_num = max(scr.all); 
 
 % Screen resolution (pixel) :
-[scr.scr_sizeX, scr.scr_sizeY] = Screen('WindowSize', scr.scr_num); 
+[scr.scr_sizeX, scr.scr_sizeY] = Screen('WindowSize', scr.scr_num)
 
 if (scr.scr_sizeX ~= const.desiredRes(1) || scr.scr_sizeY ~= ...
         const.desiredRes(2)) && const.expStart
@@ -32,36 +32,31 @@ if const.scanner == 1 && ~const.scannerTest
     const.comp = 1;
 end
 
-% Size of the display
-if const.comp == 1
-    % Settings 3T MRI room projector
-    scr.disp_sizeX = 781.9;
-    scr.disp_sizeY = 440;
-    scr.dist = 123;
-    scr.distTop = 1230;
-    scr.distBot = 1230;
-elseif const.comp == 2
-    % Settings for Display ++ INT
-    scr.disp_sizeX = 696;
-    scr.disp_sizeY = 391;
-    scr.dist = 120;
-    scr.distTop = 1210;
-    scr.distBot = 1210;
-elseif const.comp == 3
-    % Settings for 7T room Spinoza 
-    scr.disp_sizeX = 698.4;
-    scr.disp_sizeY = 392.9;
-    scr.dist = 210;
-    scr.distTop = 2100;
-    scr.distBot = 2100;
-elseif const.comp == 4 
-    % Settings for 7T Projector Spinoza centre
-    scr.disp_sizeX = 280;
-    scr.disp_sizeY = 157.5;
-    scr.dist = 14;
-    scr.distTop = 140;
-    scr.distBot = 140;
+% Size of the display :
+if const.room == 1
+    % Settings 7T MRI room
+    % --------------------
+    scr.disp_sizeX = 773;                       % setting for BOLDScreen32' 7T in mm
+    scr.disp_sizeY = 435;                       % setting for BOLDScreen32' 7T in mm
+    
+    % Set marge to 0 for video
+    if const.mkVideo == 1
+        scr.disp_margin_top = 0;                 
+        scr.disp_margin_bottom = 0; 
+    else
+        scr.disp_margin_top = 7.05;                 % top margin where projection screen is not visible in cm (175 px on ruler)
+        scr.disp_margin_bottom = 12.08;             % bottom margin where projection screen is not visible in cm
+    end 
+elseif const.room == 2
+    % Settings eyelink room
+    % ---------------------
+    scr.disp_sizeX = 696;                       % setting for Display ++ INT
+    scr.disp_sizeY = 391;                       % setting for Display ++ INT
+    scr.disp_margin_top = 0;                 
+    scr.disp_margin_bottom = 0; 
 end
+
+
 scr.disp_sizeLeft = round(-scr.disp_sizeX/2);
 scr.disp_sizeRight = round(scr.disp_sizeX/2);
 scr.disp_sizeTop = round(scr.disp_sizeY/2);
@@ -91,6 +86,34 @@ if (scr.hz >= 1.1 * const.desiredFD || scr.hz <= 0.9 * const.desiredFD) ...
         const.desiredFD);
 end
 
+% Subject dist
+if const.room == 1
+    
+    % Settings 7T MRI room
+    % --------------------
+    
+    % Screen distance 
+    scr.dist = 102;                           % general screen distance in cm
+
+    % Center of the screen :
+    scr.x_mid               =   (scr.scr_sizeX/2.0);
+    scr.y_mid               =   (scr.scr_sizeY/2.0);
+    scr.mid                 =   [scr.x_mid,scr.y_mid];
+
+elseif const.room == 2
+    
+    % Settings eyelink room
+    % ---------------------
+    
+    % Screen distance 
+    scr.dist                =   108;                           % general screen distance in cm (value to mimic screen scaner)
+
+    % Center of the screen :
+    scr.x_mid               =   (scr.scr_sizeX/2.0);
+    scr.y_mid               =   (scr.scr_sizeY/2.0);
+    scr.mid                 =   [scr.x_mid,scr.y_mid];
+
+end
 
 % Overal settings
 if ~const.expStart
