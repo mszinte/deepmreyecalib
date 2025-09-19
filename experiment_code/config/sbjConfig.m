@@ -21,22 +21,25 @@ const.task = const.expName;
 if const.expStart
     
     % Define participant
-    const.sjctNum = input(sprintf('\n\tParticipant number: '));
+    const.sjctNum = input(sprintf('\n\tParticipant number: '), 's');
+    
     if isempty(const.sjctNum)
-        error('Incorrect participant number');
+        error('Incorrect participant identifier');
     end
-    if const.sjctNum > 9
-        const.sjct = sprintf('sub-%i',const.sjctNum);
+    
+    % Check if the input is a number
+    numValue = str2double(const.sjctNum);
+    
+    if ~isnan(numValue) && isfinite(numValue) && floor(numValue) == numValue
+        % It's an integer number
+        if numValue < 10
+            const.sjct = sprintf('sub-0%i', numValue);
+        else
+            const.sjct = sprintf('sub-%i', numValue);
+        end
     else
-        const.sjct = sprintf('sub-0%i',const.sjctNum);
-    end
-
-    % Define session
-    const.sesNum = input(sprintf('\n\tSession number: '));
-    if const.sesNum > 9
-        const.session = sprintf('ses-%i',const.sesNum);
-    else
-        const.session = sprintf('ses-0%i',const.sesNum);
+        % It's a string with letters or non-integer
+        const.sjct = sprintf('sub-%s', const.sjctNum);
     end
 
     % Define run

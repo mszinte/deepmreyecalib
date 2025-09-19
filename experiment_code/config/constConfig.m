@@ -59,7 +59,7 @@ const.freeview_dur_frm = round(const.freeview_dur_sec / scr.frame_duration);% Pi
 [const.ppd] = vaDeg2pix(1, scr);                                            % one pixel per dva
 const.dpp = 1/const.ppd;   % degrees per pixel
 
-const.window_sizeVal = 12;                                                  % size of the display window
+const.window_sizeVal = 11;                                                  % size of the display window
 
 % tasks
 const.task_txt = {'inter-trial interval', 'fixation', 'pursuit', 'freeviewing'};
