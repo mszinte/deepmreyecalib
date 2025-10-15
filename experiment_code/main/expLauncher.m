@@ -33,8 +33,8 @@ const.tracker = 0;                      % run with eye tracker          0 = NO, 
 const.comp = 1;                         % run in which computer         1 = MRI; 2 = Diplay++
 const.room = 1;                         % run in which room             1 = CRMBM, 2 = Eyetracking INT
 const.scanner = 0;                      % run in MRI scanner            0 = NO, 1 = YES
-const.scannerTest = 0;                  % fake scanner trigger          0 = NO, 1 = YES
-const.training = 0;                     % training session             0 = NO, 1 = YES
+const.scannerTest = 1;                  % fake scanner trigger          0 = NO, 1 = YES
+const.training = 0;                     % training session              0 = NO, 1 = YES
         
 
 

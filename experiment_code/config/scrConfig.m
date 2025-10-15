@@ -18,6 +18,7 @@ function scr = scrConfig(const)
 scr.all = Screen('Screens');
 scr.scr_num = max(scr.all); 
 
+
 % Screen resolution (pixel) :
 [scr.scr_sizeX, scr.scr_sizeY] = Screen('WindowSize', scr.scr_num)
 
@@ -36,16 +37,16 @@ end
 if const.room == 1
     % Settings 7T MRI room
     % --------------------
-    scr.disp_sizeX = 773;                       % setting for BOLDScreen32' 7T in mm
-    scr.disp_sizeY = 435;                       % setting for BOLDScreen32' 7T in mm
+    scr.disp_sizeX = 807;                       % setting for BOLDScreen32' 7T in mm
+    scr.disp_sizeY = 454;                       % setting for BOLDScreen32' 7T in mm
     
     % Set marge to 0 for video
     if const.mkVideo == 1
         scr.disp_margin_top = 0;                 
         scr.disp_margin_bottom = 0; 
     else
-        scr.disp_margin_top = 7.05;                 % top margin where projection screen is not visible in cm (175 px on ruler)
-        scr.disp_margin_bottom = 12.08;             % bottom margin where projection screen is not visible in cm
+        scr.disp_margin_top = 5.25;                 % top margin where projection screen is not visible in cm (175 px on ruler)
+        scr.disp_margin_bottom = 20.18;             % bottom margin where projection screen is not visible in cm
     end 
 elseif const.room == 2
     % Settings eyelink room
@@ -93,7 +94,7 @@ if const.room == 1
     % --------------------
     
     % Screen distance 
-    scr.dist = 102;                           % general screen distance in cm
+    scr.dist = 100;                           % general screen distance in cm
 
     % Center of the screen :
     scr.x_mid               =   (scr.scr_sizeX/2.0);
