@@ -75,6 +75,8 @@ trialMat_fixation = [1, 13, nan, nan, nan; % add intertrial interval
                      trialMat_fixation];    
 
 % Pursuit experimental loop
+% Pursuit experimental loop
+scr.y_mid_margin = const.disp_margin_top + const.disp_max/2;
 ii = 0;
 trialMat_pursuit = zeros(const.nb_trials_pursuit, expDes.nb_var+1)*nan;
 for rep = 1:const.nb_repeat_pursuit
@@ -83,11 +85,14 @@ for rep = 1:const.nb_repeat_pursuit
             ii = ii + 1;
             trialMat_pursuit(ii, 1) = 3;
             trialMat_pursuit(ii, 3) = var2;
-            trialMat_pursuit(ii, 4) = var3; % redefined after to keep the dot in the screen
+            trialMat_pursuit(ii, 4) = var3;
         end
     end
 end
 trialMat_pursuit = trialMat_pursuit(randperm(const.nb_trials_pursuit),:);
+
+% Define the pursuit window center (shifted up based on margin)
+pursuit_window_center = [scr.x_mid, scr.y_mid_margin];
 
 % Compute angle (var3)
 pursuit_coords_on = [];
@@ -96,23 +101,26 @@ for trial_pursuit = 1:const.nb_trials_pursuit
     pursuit_amp = const.pursuit_amp(trialMat_pursuit(trial_pursuit,3));
     pursuit_angle = const.pursuit_angles(trialMat_pursuit(trial_pursuit,4));
     recompute = 1;
+    
     while recompute == 1
         if trial_pursuit == 1
-            pursuit_coord_on = [scr.x_mid, scr.y_mid];
+            pursuit_coord_on = pursuit_window_center;  % Start at shifted center
             pursuit_coord_off = [scr.x_mid + pursuit_amp * cosd(pursuit_angle),...
-                                 scr.y_mid + pursuit_amp * -sind(pursuit_angle)];
+                                 scr.y_mid_margin + pursuit_amp * -sind(pursuit_angle)];
         elseif trial_pursuit == const.nb_trials_pursuit
             pursuit_coord_on = pursuit_coords_off(trial_pursuit-1, :);
-            pursuit_coord_off = [scr.x_mid, scr.y_mid];
+            pursuit_coord_off = pursuit_window_center;  % End at shifted center
         else
             pursuit_coord_on = pursuit_coords_off(trial_pursuit-1, :);
             pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
                                                     pursuit_amp * -sind(pursuit_angle)];
         end
         
-        % if fixation point leaves calibration window select another angle
-        if pursuit_coord_off(1) < scr.x_mid - const.window_size/2 || pursuit_coord_off(1) > scr.x_mid + const.window_size/2 || ...
-                pursuit_coord_off(2) < scr.y_mid - const.window_size/2 || pursuit_coord_off(2) > scr.y_mid + const.window_size/2
+        % Check if fixation point leaves calibration window
+        if pursuit_coord_off(1) < scr.x_mid - const.window_size/2 || ...
+           pursuit_coord_off(1) > scr.x_mid + const.window_size/2 || ...
+           pursuit_coord_off(2) < scr.y_mid_margin - const.window_size/2 || ...
+           pursuit_coord_off(2) > scr.y_mid_margin + const.window_size/2
             recompute = 1;
             rand_val = randperm(length(const.pursuit_angles));
             trialMat_pursuit(trial_pursuit, 4) = rand_val(1);
@@ -121,13 +129,13 @@ for trial_pursuit = 1:const.nb_trials_pursuit
             recompute = 0;
         end
     end
+    
     pursuit_coords_on = [pursuit_coords_on; pursuit_coord_on];
     pursuit_coords_off = [pursuit_coords_off; pursuit_coord_off];
 end
+
 trialMat_pursuit = [1, 13, nan, nan, nan; % add intertrial interval
                     trialMat_pursuit];
-
-
 % Freeview experimental loop
 ii = 0;
 trialMat_freeview = zeros(const.nb_trials_freeview, expDes.nb_var+1)*nan;

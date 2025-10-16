@@ -63,7 +63,7 @@ scr.disp_sizeRight = round(scr.disp_sizeX/2);
 scr.disp_sizeTop = round(scr.disp_sizeY/2);
 scr.disp_sizeBot = round(-scr.disp_sizeY/2);
 scr.x_mid = (scr.scr_sizeX/2.0);
-scr.y_mid = (scr.scr_sizeY/2.0);
+scr.y_mid = (scr.scr_sizeY/2.0); %not used in 7t because of margins, instead scr.y_mid_margin or const.disp_margin_top + const.disp_max/2 (careful when generating video!)
 scr.mid = [scr.x_mid,scr.y_mid];
 
 

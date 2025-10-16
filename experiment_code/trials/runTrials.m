@@ -72,7 +72,7 @@ for t = 1:const.nb_trials
     % Compute fixation coordinates
     if task == 1
         iti_x = scr.x_mid;
-        iti_y = scr.y_mid;
+        iti_y = const.disp_margin_top + const.disp_max/2;
     end
     
     % Compute fixation coordinates
@@ -87,12 +87,12 @@ for t = 1:const.nb_trials
         pursuit_angle = const.pursuit_angles(var3);
         
         if trial_pursuit == 1
-            pursuit_coord_on = [scr.x_mid, scr.y_mid];
+            pursuit_coord_on = [scr.x_mid, const.disp_margin_top + const.disp_max/2];
             pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
                                                     pursuit_amp * -sind(pursuit_angle)];
         elseif trial_pursuit == const.nb_trials_pursuit
             pursuit_coord_on = pursuit_coord_off;
-            pursuit_coord_off = [scr.x_mid, scr.y_mid];
+            pursuit_coord_off = [scr.x_mid, const.disp_margin_top + const.disp_max/2];
         else
             pursuit_coord_on = pursuit_coord_off;
             pursuit_coord_off = pursuit_coord_on + [pursuit_amp * cosd(pursuit_angle), ...
@@ -113,7 +113,7 @@ for t = 1:const.nb_trials
     if t == 1
         time_start = GetSecs;
         Screen('FillRect',scr.main,const.background_color);
-        drawBullsEye(scr, const, scr.x_mid, scr.y_mid, 0);
+        drawBullsEye(scr, const, scr.x_mid, const.disp_margin_top + const.disp_max/2, 0);
         Screen('Flip',scr.main);
         tellapsed               =   GetSecs - time_start;
         first_trigger = 0;
